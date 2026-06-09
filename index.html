@@ -1,0 +1,2100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ナンコレ｜レイアウトモック</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c0d11;--bg2:#101218;--panel:#15171d;--panel2:#1a1d25;
+    --line:#262a35;--line2:#333845;
+    --ink:#e9e5da;--sub:#8f8b82;--dim:#5e5a52;
+    --amber:#d9a441;--teal:#46b9a8;--red:#c75a4e;--blue:#6aa0e0;
+    --serif:"Shippori Mincho B1",serif;--sans:"Zen Kaku Gothic New",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{font-family:var(--sans);background:#050608;color:var(--ink);line-height:1.8;display:flex;justify-content:center;padding:18px}
+  .phone{width:100%;max-width:412px;height:860px;max-height:92vh;background:var(--bg);border-radius:30px;position:relative;display:flex;flex-direction:column;overflow:hidden;border:1px solid #20242e;box-shadow:0 30px 80px -20px rgba(0,0,0,.85)}
+  .phone::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;background:radial-gradient(120% 60% at 50% -10%,rgba(217,164,65,.08),transparent 60%);box-shadow:inset 0 0 120px rgba(0,0,0,.6)}
+  .scroll{flex:1;overflow-y:auto;position:relative;z-index:1}
+  .scroll::-webkit-scrollbar{width:0}
+
+  .appbar{position:sticky;top:0;z-index:10;padding:15px 18px 11px;background:linear-gradient(180deg,rgba(12,13,17,.97),rgba(12,13,17,.8));backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .kick{font-size:9px;letter-spacing:.42em;color:var(--amber);padding-left:.42em}
+  .logo{font-family:var(--serif);font-weight:800;font-size:24px;letter-spacing:.06em;margin-top:3px;display:flex;align-items:baseline;flex-wrap:wrap;gap:9px}
+  .logo .full{font-family:var(--sans);font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.02em}
+  .logo .full b{color:var(--amber)}
+  .logo b{color:var(--amber)}
+  .tagline{font-family:var(--sans);font-size:10.5px;line-height:1.65;color:var(--sub);margin-top:8px;border-top:1px solid var(--line);padding-top:8px}
+  .tagline b{color:var(--amber);font-weight:700}
+
+  .nav{display:flex;border-top:1px solid var(--line);background:var(--bg2);position:relative;z-index:5}
+  .nav button{flex:1;border:none;background:none;padding:9px 0 11px;font-family:var(--sans);font-size:9.5px;color:var(--dim);cursor:pointer;font-weight:700;position:relative}
+  .nav button .ic{display:block;font-size:18px;margin-bottom:2px;opacity:.55}
+  .nav button.on{color:var(--amber)}
+  .nav button.on .ic{opacity:1}
+  .nav button.on::before{content:"";position:absolute;top:0;left:28%;right:28%;height:2px;background:var(--amber);border-radius:2px}
+
+  .page{display:none;padding:16px 16px 26px}
+  .page.on{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+
+  .sec{font-family:var(--serif);font-size:15px;font-weight:700;margin:22px 2px 12px;display:flex;align-items:center;gap:9px}
+  .sec:first-child{margin-top:6px}
+  .sec::before{content:"";width:4px;height:15px;background:var(--amber);border-radius:1px}
+
+  .tags{display:flex;gap:6px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+  .cat{font-size:10px;font-weight:700;color:var(--amber);letter-spacing:.05em}
+  .truth{font-size:9px;font-weight:800;border-radius:4px;padding:2px 7px;letter-spacing:.04em}
+  .truth.fact{color:#06201c;background:var(--teal)}
+  .truth.maybe{color:#241a06;background:var(--amber)}
+  .truth.unknown{color:var(--red);border:1px solid var(--red)}
+  .truth.solved{color:#08172b;background:var(--blue)}
+  .caution{font-size:9px;color:var(--red);letter-spacing:.04em}
+  .fileno{font-size:9px;color:var(--dim);letter-spacing:.12em;margin-left:auto}
+
+  .hero{background:var(--panel);border:1px solid var(--line2);border-radius:16px;padding:20px;cursor:pointer;position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;inset:0;background:radial-gradient(80% 60% at 80% 10%,rgba(217,164,65,.1),transparent 60%);pointer-events:none}
+  .hero .em{font-size:40px}
+  .hero h2{font-family:var(--serif);font-size:21px;font-weight:800;line-height:1.5;margin:10px 0 8px}
+  .hero p{font-size:13px;color:var(--sub);line-height:1.7}
+  .hero .read{font-size:11px;color:var(--dim);margin-top:12px}
+
+  /* おすすめ横スクロール */
+  .reco{display:flex;gap:11px;overflow-x:auto;padding:2px 2px 6px}
+  .reco::-webkit-scrollbar{height:0}
+  .rcard{flex-shrink:0;width:158px;background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:13px;cursor:pointer}
+  .rcard:active{border-color:var(--amber)}
+  .rcard .em{font-size:24px}
+  .rcard h4{font-family:var(--serif);font-size:13.5px;font-weight:700;line-height:1.45;margin:8px 0 6px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+
+  .list{display:flex;flex-direction:column;gap:11px}
+  .art{display:flex;gap:13px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:14px;cursor:pointer;transition:.14s}
+  .art:active{transform:scale(.99);border-color:var(--amber)}
+  .art .em{font-size:26px;flex-shrink:0;line-height:1.1;margin-top:2px}
+  .art .b{flex:1;min-width:0}
+  .art h3{font-family:var(--serif);font-size:15px;font-weight:700;line-height:1.5}
+  .art p{font-size:11.5px;color:var(--sub);margin-top:4px;line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .art .read{font-size:10px;color:var(--dim);margin-top:6px}
+
+  /* ランキング */
+  .rk{display:flex;gap:11px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin-bottom:8px;cursor:pointer}
+  .rk:active{border-color:var(--amber)}
+  .rk .n{font-family:var(--serif);font-weight:800;font-size:18px;width:26px;text-align:center;color:var(--dim);flex-shrink:0}
+  .rk:nth-child(1) .n{color:var(--amber)}.rk:nth-child(2) .n{color:#cdc3b0}.rk:nth-child(3) .n{color:#c89a6a}
+  .rk .em{font-size:21px;flex-shrink:0}
+  .rk .b{flex:1;min-width:0}
+  .rk h3{font-family:var(--serif);font-size:14px;font-weight:700;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rk .sc{font-size:10.5px;color:var(--red);margin-top:2px}
+
+  .tabbar{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 14px}
+  .tabbar::-webkit-scrollbar{height:0}
+  .tab{flex-shrink:0;border:1px solid var(--line2);background:var(--panel2);border-radius:99px;padding:8px 14px;font-family:var(--sans);font-size:12.5px;font-weight:700;color:var(--sub);cursor:pointer;white-space:nowrap}
+  .tab.on{background:var(--amber);color:#1a1206;border-color:var(--amber)}
+  .searchwrap{position:relative;margin:2px 0 16px}
+  .searchwrap input{width:100%;background:var(--panel2);border:1px solid var(--line2);border-radius:11px;padding:13px 14px 13px 40px;color:var(--ink);font-family:var(--sans);font-size:14px;outline:none}
+  .searchwrap input:focus{border-color:var(--amber)}
+  .searchwrap input::placeholder{color:var(--dim)}
+  .searchwrap .si{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:15px;opacity:.6}
+  .none,.empty{text-align:center;color:var(--sub);font-size:13px;padding:48px 16px}
+  .empty .be{font-size:38px;display:block;margin-bottom:10px;opacity:.7}
+
+  /* 記事ページ */
+  .ov{position:absolute;inset:0;background:var(--bg);z-index:30;display:none;flex-direction:column}
+  .ov.on{display:flex;animation:slidein .26s ease}
+  @keyframes slidein{from{transform:translateX(100%)}to{transform:none}}
+  .ov-bar{display:flex;align-items:center;gap:10px;padding:13px 14px;border-bottom:1px solid var(--line)}
+  .ov-bar .x{background:none;border:none;font-size:16px;color:var(--sub);cursor:pointer;font-weight:700}
+  .ov-bar .fav{margin-left:auto;background:none;border:1px solid var(--line2);color:var(--sub);border-radius:99px;padding:6px 13px;font-family:var(--sans);font-size:11px;font-weight:700;cursor:pointer}
+  .ov-bar .fav.on{color:var(--amber);border-color:var(--amber)}
+  .ov-body{flex:1;overflow-y:auto;padding:20px 18px 36px}
+  .a-em{font-size:46px}
+  .a-ti{font-family:var(--serif);font-size:25px;font-weight:800;line-height:1.55;margin:8px 0 12px}
+  .a-meta{font-size:11px;color:var(--dim);margin-bottom:18px;border-bottom:1px solid var(--line);padding-bottom:16px}
+  .a-body p{font-size:14.5px;color:#d7d2c7;line-height:1.95;margin-bottom:16px}
+  .a-body .dummy{font-size:11px;color:var(--dim);font-style:italic}
+  .adslot{background:var(--panel2);border:1px dashed var(--line2);border-radius:10px;padding:22px;text-align:center;color:var(--dim);font-size:11px;margin:20px 0}
+
+  /* 投票 */
+  .vote{background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:16px;margin:22px 0}
+  .vote-q{font-family:var(--serif);font-size:15px;font-weight:700;text-align:center;margin-bottom:13px}
+  .vote-btns{display:flex;gap:10px}
+  .vote-btns button{flex:1;border:1px solid var(--line2);background:var(--panel2);color:var(--ink);border-radius:10px;padding:13px;font-family:var(--sans);font-weight:700;font-size:14px;cursor:pointer}
+  .vote-btns button.fact:active{border-color:var(--teal);color:var(--teal)}
+  .vote-btns button.fake:active{border-color:var(--red);color:var(--red)}
+  .vbar{display:flex;height:38px;border-radius:9px;overflow:hidden;font-size:12px;font-weight:800}
+  .vbar .f{background:var(--teal);color:#06201c;display:flex;align-items:center;padding-left:11px}
+  .vbar .k{background:var(--red);color:#fff;display:flex;align-items:center;justify-content:flex-end;padding-right:11px}
+  .vmine{font-size:11.5px;color:var(--sub);text-align:center;margin-top:10px}
+  .vmine b{color:var(--amber)}
+
+  /* 衝撃度評価 */
+  .rate{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:18px 0;text-align:center}
+  .rate .lab{font-size:13px;font-weight:700;margin-bottom:8px}
+  .stars{font-size:26px;letter-spacing:4px;cursor:pointer;color:var(--dim)}
+  .stars span{transition:.1s}
+  .stars span.on{color:var(--amber)}
+  .rate .avg{font-size:11px;color:var(--sub);margin-top:8px}
+
+  .share-h{font-size:12px;color:var(--sub);font-weight:700;margin:24px 0 9px;text-align:center}
+  .share{display:flex;gap:8px;margin-bottom:6px}
+  .share a,.share button{flex:1;text-align:center;border-radius:10px;padding:12px 6px;font-family:var(--sans);font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;border:1px solid var(--line2);background:var(--panel2);color:var(--ink)}
+  .share a.tw{background:#0a0a0a;color:#fff;border-color:#3a3a3a}
+  .share a.ln{background:#06c755;color:#fff;border-color:#06c755}
+  .share button.cp{color:var(--amber);border-color:var(--amber);background:transparent}
+  .src{font-size:11px;color:var(--dim);background:var(--panel);border-left:3px solid var(--amber);padding:10px 12px;border-radius:0 8px 8px 0;margin:20px 0 24px}
+
+  /* コメント */
+  .cmt-h{font-family:var(--serif);font-size:14px;font-weight:700;margin:24px 0 12px;display:flex;align-items:center;gap:8px}
+  .cmt-h::before{content:"";width:4px;height:14px;background:var(--amber);border-radius:1px}
+  .cmt-name{width:100%;background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:9px 11px;color:var(--ink);font-family:var(--sans);font-size:12.5px;outline:none;margin-bottom:8px}
+  .cmt-name:focus{border-color:var(--amber)}
+  .cmt-name::placeholder{color:var(--dim)}
+  .cmt-input{display:flex;gap:8px;margin-bottom:14px}
+  .cmt-input textarea{flex:1;background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:10px;color:var(--ink);font-family:var(--sans);font-size:13px;resize:none;height:42px;outline:none}
+  .cmt-input textarea:focus{border-color:var(--amber)}
+  .cmt-input button{background:var(--amber);color:#1a1206;border:none;border-radius:10px;padding:0 16px;font-family:var(--sans);font-weight:700;font-size:13px;cursor:pointer}
+  .cmt{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:11px 13px;margin-bottom:8px}
+  .cmt .who{font-size:11px;color:var(--amber);font-weight:700;margin-bottom:3px}
+  .cmt .txt{font-size:13px;color:#d7d2c7;line-height:1.6}
+  .rel-h{font-family:var(--serif);font-size:14px;font-weight:700;margin:24px 0 12px;display:flex;align-items:center;gap:8px}
+  .rel-h::before{content:"";width:4px;height:14px;background:var(--amber);border-radius:1px}
+  /* インタースティシャル広告（×で閉じる） */
+  .adint{position:absolute;inset:0;z-index:50;background:rgba(5,6,8,.93);display:none;align-items:center;justify-content:center;padding:24px}
+  .adint.on{display:flex;animation:fade .2s ease}
+  .adint-box{position:relative;width:100%;max-width:330px;background:var(--panel);border:1px solid var(--line2);border-radius:16px;padding:20px 16px 16px;text-align:center}
+  .adint-x{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line2);background:var(--panel2);color:var(--ink);font-size:15px;cursor:pointer;line-height:1}
+  .adint-x:active{background:var(--amber);color:#1a1206}
+  .adint-label{font-size:10px;color:var(--dim);letter-spacing:.22em;margin-bottom:12px}
+  .adint-ad{background:var(--panel2);border:1px dashed var(--line2);border-radius:10px;padding:54px 14px;color:var(--dim);font-size:12px;line-height:1.7}
+  .adint-hint{font-size:10px;color:var(--dim);margin-top:12px}
+  /* アンカー広告（下部固定） */
+  .adanchor{position:relative;background:var(--panel2);border-top:1px solid var(--line);color:var(--dim);font-size:11px;text-align:center;padding:11px;display:flex;align-items:center;justify-content:center}
+  .adanchor.hidden{display:none}
+  .adanchor .ax{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:22px;height:22px;border:none;background:none;color:var(--sub);cursor:pointer;font-size:13px}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="appbar"><div class="kick">REAL UNEXPLAINED FILES</div><div class="logo">ナン<b>コレ</b><span class="full">＝ ナンダコレ事件集</span></div>
+    <div class="tagline">創作ではありません。世界で実際に語られてきた事件・証言だけを掲載。検証済みの事実から、真偽不明のミステリーまで。<b>信じるかどうかは、あなた次第。</b></div></div>
+
+  <div class="scroll" id="scroll">
+    <div class="page on" id="p-home">
+      <div id="hero"></div>
+      <div class="sec">あなたへのおすすめ</div>
+      <div class="reco" id="recoRow"></div>
+      <div class="adslot">広告スペース（ホーム）</div>
+      <div class="sec">最新の事件簿</div>
+      <div class="list" id="homeList"></div>
+    </div>
+    <div class="page" id="p-cat">
+      <div class="tabbar" id="catTabs"></div>
+      <div class="adslot">広告スペース（カテゴリ）</div>
+      <div class="list" id="catList"></div>
+    </div>
+    <div class="page" id="p-rank">
+      <div class="sec">衝撃度ランキング</div>
+      <div id="rankList"></div>
+    </div>
+    <div class="page" id="p-search">
+      <div class="searchwrap"><span class="si">🔍</span><input id="searchInput" placeholder="事件をさがす…（例：宇宙、前世）"></div>
+      <div class="adslot">広告スペース（検索）</div>
+      <div id="searchArea"></div>
+    </div>
+    <div class="page" id="p-save">
+      <div class="sec">お気に入りの事件簿</div>
+      <div id="saveList"></div>
+    </div>
+  </div>
+
+  <div class="adanchor" id="adAnchor">広告スペース（アンカー）<button class="ax" onclick="document.getElementById('adAnchor').classList.add('hidden')">✕</button></div>
+
+  <div class="adint" id="adInt">
+    <div class="adint-box">
+      <button class="adint-x" onclick="closeInterstitial()">✕</button>
+      <div class="adint-label">広告</div>
+      <div class="adint-ad">広告スペース（記事を読む前のインタースティシャル）<br>※ここに忍者AdMax等のコードを設置</div>
+      <div class="adint-hint">✕ を押すと記事に進めます</div>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button class="on" data-tab="home"><span class="ic">🗂️</span>ホーム</button>
+    <button data-tab="cat"><span class="ic">🗃️</span>カテゴリ</button>
+    <button data-tab="rank"><span class="ic">🔥</span>ランキング</button>
+    <button data-tab="search"><span class="ic">🔍</span>さがす</button>
+    <button data-tab="save"><span class="ic">👤</span>マイページ</button>
+  </div>
+
+  <div class="ov" id="ov">
+    <div class="ov-bar"><button class="x" onclick="goBack()">‹ 戻る</button><button class="fav" id="favBtn">♡ お気に入り</button></div>
+    <div class="ov-body" id="ovBody"></div>
+  </div>
+</div>
+
+<script>
+/* ===== ラベル ===== */
+const TRUTH={fact:{c:"fact",t:"事実"},maybe:{c:"maybe",t:"諸説あり"},unknown:{c:"unknown",t:"未確認"},solved:{c:"solved",t:"解決済み"}};
+
+/* ===== ダミー記事 [cat,truth,emoji,title,excerpt] ===== */
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const ARTICLES=[
+ {cat:"失踪・消失",truth:"maybe",emoji:"⛵",caution:2,
+  title:"無人のまま漂流していた帆船「メアリー・セレスト号」",
+  excerpt:"船も積荷も無事。なのに、乗っていた全員だけが消えていた。",
+  body:`メアリー・セレスト号は、1861年にカナダで「アマゾン」の名で建造され、のちに改名された2本マストの帆船だ。1872年11月7日、船長ベンジャミン・ブリッグズの指揮のもと、約1700樽の工業用アルコールを積み、ニューヨークからイタリアのジェノヴァへ向けて出航した。乗っていたのは、ブリッグズと妻、幼い娘、そして7人の船員——あわせて10人だった。
+
+約1か月後の12月、アゾレス諸島付近の海上で、別の帆船デイ・グラツィア号がメアリー・セレスト号を発見する。様子がおかしいので乗り込んでみると、船内には誰一人いなかった。
+
+奇妙だったのは、その状態だ。船はおおむね航行可能で、半年分とも言われる食料や水も残っていた。一方で救命艇が一隻なくなり、六分儀やクロノメーターといった航海用の道具が持ち出されていた。積荷のアルコールは、1700樽あまりのうち数樽だけが空になっていた。乗員が自らの意思で、急いで船を離れたように見える状況だった。
+
+ではなぜ、沈んでもいない船を全員で捨てたのか。アルコールから出るガスへの爆発の恐れ、突風や竜巻、浸水への不安からの誤った判断など、これまで数えきれない説が唱えられてきた。だが決定的な証拠はひとつも残っておらず、真相は今も不明のままだ。
+
+ちなみに「発見時、お茶がまだ温かく、朝食が調理中だった」という有名な逸話は、後に作家コナン・ドイルが書いた小説の創作が広まったもので、事実ではない。脚色を取り除いてもなお謎が残る——それがこの事件の不気味さだ。`,
+  src:"https://ja.wikipedia.org/wiki/メアリー・セレスト"},
+
+ {cat:"未解決事件",truth:"maybe",emoji:"🏔️",caution:3,
+  title:"テントを切り裂いて雪原へ逃げた9人「ディアトロフ峠事件」",
+  excerpt:"経験豊富な登山隊が、なぜか薄着のまま極寒の外へ飛び出していた。",
+  body:`1959年2月、ソビエト連邦（現ロシア）のウラル山脈北部で、イーゴリ・ディアトロフをリーダーとする男女9人の登山隊が消息を絶った。全員が長距離の雪山登山に慣れた経験者ばかりだった。
+
+予定日を過ぎても戻らないため捜索が行われ、雪の斜面にテントが見つかる。だがその状態は異様だった。テントは内側から刃物で切り裂かれ、外へ回る余裕すらなく、一刻も早く飛び出さねばならない切迫した事態が起きたことをうかがわせた。
+
+メンバーは靴も履かない薄着のまま、テントから離れた斜面の下へ向かって逃げていた。何人かは氷点下の中で低体温症により倒れ、一部の遺体には肋骨や頭蓋の骨折など、説明の難しい重い損傷も見つかったとされる。
+
+当時のソ連の捜査は「未知の不可抗力」によるものと結論し、現場一帯は数年間立ち入り禁止とされた。雪崩、低体温症による錯乱（パニックや矛盾脱衣）、軍の秘密実験、自然現象など、さまざまな説が検証されてきた。
+
+2021年には、特殊な小規模の雪崩が9人を襲ったとする研究も発表され、有力な説のひとつとされている。それでもなお、なぜ彼らが真夜中に安全なテントを切り裂いてまで外へ出たのか、すべてに納得のいく説明はついていない。`,
+  src:"https://ja.wikipedia.org/wiki/ディアトロフ峠事件"},
+
+ {cat:"UFO・宇宙人",truth:"unknown",emoji:"📡",caution:2,
+  title:"宇宙から届いた72秒の謎の信号「Wow!シグナル」",
+  excerpt:"あまりに“それらしい”信号に、研究者は思わず「Wow!」と書き込んだ。",
+  body:`1977年8月15日、アメリカ・オハイオ州立大学の電波望遠鏡「ビッグイヤー」が、地球外知的生命体を探すSETIプロジェクトの観測中に、宇宙の一点から届く強く規則的な電波をとらえた。
+
+数日後に記録紙を確認していた研究者ジェリー・エーマンは、ずば抜けて強い信号の並びを見つけ、その箇所を丸で囲んで余白に「Wow!」と書き込んだ。これが、この信号が「Wow!シグナル」と呼ばれる由来だ。記録に残った強度の列「6EQUJ5」の「U」は、観測史上でも飛び抜けた強さを意味していた。
+
+信号は非常に狭い周波数帯に集中しており、しかもその周波数は、宇宙にもっとも豊富な中性水素が出す電波（約1420MHz）にごく近かった。この帯域は、もし宇宙人が通信するなら使うだろうと考えられてきた“特別な周波数”でもある。地球由来の電波やノイズでは説明しづらい特徴がそろっていた。
+
+ビッグイヤーは地球の自転を利用して空の一点を約72秒間観測する仕組みで、信号はその時間ぴったりの間だけ現れ、強まってから消えていった。これも、宇宙の彼方から届いた信号としてつじつまが合う動き方だった。
+
+しかし、その後どれだけ同じ方向を探しても、信号は二度と検出されなかった。近年は「冷たい水素の雲が一時的に強く光ったのでは」という新説も出ているが確定ではなく、発生源は今なお謎のままだ。`,
+  src:"https://ja.wikipedia.org/wiki/Wow!_シグナル"},
+
+ {cat:"歴史のミステリー",truth:"fact",emoji:"📜",caution:1,
+  title:"誰も読めない中世の写本「ヴォイニッチ手稿」",
+  excerpt:"未知の文字と奇妙な絵。数百年、誰一人として解読できていない。",
+  body:`ヴォイニッチ手稿は、未知の文字でびっしりと書き込まれた一冊の写本だ。1912年にこれを手に入れた古書商ウィルフリッド・ヴォイニッチの名にちなんで呼ばれている。
+
+中身は実に奇妙だ。実在しない植物の図、星や天体らしき円形の図、水浴びをする小さな人物群など、意味のつかめない挿絵が大量に描かれている。そして肝心の文章は、どの既知の言語にも当てはまらない独自の文字でつづられている。
+
+第二次大戦の暗号解読に関わった専門家から、現代の言語学者、さらにはコンピューターまでもが解読に挑んできた。にもかかわらず、いまだに「何が書かれているのか」は誰にも読み解けていない。
+
+意味のない文字を並べただけの、手の込んだ偽書ではないかという見方も根強い。しかし放射性炭素年代測定では、使われている羊皮紙が15世紀初頭のものと確認されており、少なくとも“最近のいたずら”ではないことははっきりしている。
+
+実在し、本物の中世の素材で作られ、それでいて誰にも解読できない——この「確かに存在するのに中身だけが分からない」という事実こそが、ヴォイニッチ手稿が世界一有名な謎の文書とされる理由だ。`,
+  src:"https://ja.wikipedia.org/wiki/ヴォイニッチ手稿"},
+
+ {cat:"自然の怪現象",truth:"fact",emoji:"⚡",caution:2,
+  title:"宙を漂う光の球「球電（ボール・ライトニング）」",
+  excerpt:"窓をすり抜け、音もなく消える光の玉。長く“作り話”とされてきた。",
+  body:`球電（ボール・ライトニング）は、雷雨のときなどに現れる、光る球状の物体だ。大きさは数センチから数十センチほどで、宙をふわふわと漂い、数秒から十数秒ほど存在して消えるとされる。
+
+その目撃証言は、古くから世界各地に数多く残っている。窓ガラスをすり抜けて室内に入ってきた、しばらく部屋を漂ったあと音を立てて弾けるように消えた、機内に現れて通路を流れていった——にわかには信じがたい話も多い。
+
+あまりに不思議な現象のため、長い間「目の錯覚」「見間違い」「作り話」として、まともに取り合われてこなかった。普通の雷とちがって再現も観測も難しく、科学の対象になりにくかったのだ。
+
+しかし近年、状況は変わってきた。自然界で偶然その光をスペクトル分析できた観測例が報告され、実験室でもよく似た発光体を人工的に作り出せたという研究が出てきたことで、現象としての存在は認められつつある。
+
+ただし、「なぜ・どうやって発生するのか」については、プラズマ説や、落雷で土から気化した物質が燃えているという説など複数があり、まだ決着していない。実在はほぼ確かなのに、正体は未解明——それが球電だ。`,
+  src:"https://ja.wikipedia.org/wiki/球電"},
+
+ {cat:"未解決事件",truth:"maybe",emoji:"🏖️",caution:3,
+  title:"砂浜の身元不明死「タマム・シュッド事件」",
+  excerpt:"ポケットには「終わり」と書かれた紙片。男の正体は長く謎だった。",
+  body:`1948年12月1日の早朝、オーストラリア・アデレード近郊のソマートン公園の海岸で、一人の中年男性が死亡しているのが見つかった。まるで座ったまま眠ってしまったかのような姿だったという。
+
+ところが、その身元がまったく分からなかった。所持品に名前を示すものはなく、衣服のタグまで丁寧に切り取られていた。死因もはっきりせず、当局は「前代未聞の謎」と呼ぶことになる。男は通称「ソマートン・マン」と呼ばれた。
+
+最大の手がかりは、ズボンの隠しポケットから見つかった小さな紙片だった。そこには「Tamám Shud」とだけ印刷されていた。ペルシア語で「終わった」「済んだ」を意味する言葉で、11世紀ペルシアの詩人ウマル・ハイヤームの詩集『ルバイヤート』の最後のページを破り取ったものだった。
+
+さらに、その紙片が破り取られたとみられる『ルバイヤート』本体が、近くに停められた車の中から見つかる。本には暗号のような文字列や、電話番号らしき数字まで書き込まれていた。事件は国内外で大々的に報じられ、世界的なミステリーとなった。
+
+長く身元も死因も不明のままだったが、2022年には研究者デレク・アボットらがDNA鑑定をもとに、非公式ながら男の身元の手がかりを示したと報じられた。それでも、暗号の意味や死の真相を含め、事件の全貌は今も解き明かされていない。`,
+  src:"https://ja.wikipedia.org/wiki/タマム・シュッド事件"},
+
+ {cat:"オーパーツ・遺物",truth:"fact",emoji:"⚙️",caution:1,
+  title:"2000年前の“古代のコンピューター”「アンティキティラ島の機械」",
+  excerpt:"古代ギリシャの沈没船から出てきた、歯車だらけの精密装置。",
+  body:`1901年、ギリシャのアンティキティラ島の沖で、海綿を採る潜水士たちが古代の沈没船を発見した。彫像や壺などの遺物が引き上げられる中に、一見ただの腐食した青銅の塊があった。
+
+ところが後の調査で、その塊の内部には、精巧に噛み合う多数の歯車が組み込まれていることが分かった。当時の常識では考えられない、機械仕掛けの装置だったのだ。
+
+X線やCTスキャンなどを使った長年の研究によって、これは紀元前の古代ギリシャで作られた装置で、太陽や月の位置、惑星の動き、月食や日食、さらには暦やオリンピックの周期までを計算・表示できる、いわば「古代のアナログ計算機」だと考えられている。
+
+驚くべきは、その技術水準だ。これほど複雑な歯車機構が再び世に現れるのは、千年以上もあとのことになる。なぜ古代ギリシャでこれが作れたのか、どこまで使われていたのかには、まだ分かっていないことも多い。
+
+ただ一つはっきりしているのは、これがれっきとした実在の遺物であり、その精巧さは本物だということだ。オーパーツ（時代に合わない出土品）の代表例としてしばしば語られるが、こちらは「本当に存在する驚異」である。`,
+  src:"https://ja.wikipedia.org/wiki/アンティキティラ島の機械"},
+
+ {cat:"自然の怪現象",truth:"solved",emoji:"🪨",caution:1,
+  title:"ひとりでに動く石「レーストラック・プラヤの動く石」",
+  excerpt:"誰も動かしていないのに、砂漠の石が移動し、長い跡を残す。",
+  body:`アメリカ・デスバレー国立公園の奥地に、「レーストラック・プラヤ」と呼ばれる干上がった湖の底がある。ここでは、地面に刻まれた長い跡の先に、大きな石が点々と置かれている。まるで石が自分の意思で動き、レースをしたかのような光景だ。
+
+石の大きさはさまざまで、中には数百キロもある巨岩もある。にもかかわらず、人や動物が動かした形跡はまったくない。あるのは、平らな泥の上に残された、ときに数百メートルにも及ぶ引きずり跡だけだ。
+
+1940年代から科学者たちがこの謎に挑み、塵旋風、洪水、強風、薄い氷など、さまざまな原因が提唱されてきた。だが「動く瞬間」を実際にとらえた者はいなかった。
+
+転機は2014年。研究者のリチャード・ノリスらが、石にGPSを取り付け、コマ撮りカメラと気象観測機器を設置して数年間待ち続けた末に、ついにその仕組みを突き止めた。
+
+正体はこうだ。冬の冷えた夜、ごく浅く張った水の上に薄い氷ができる。昼に氷が割れて漂う氷の板が、弱い風に押されながら、埋まった石をゆっくりと押し動かしていたのだ。長年の謎は、こうしてきちんと説明がついた。`,
+  src:"https://ja.wikipedia.org/wiki/動く石"},
+
+ {cat:"自然の怪現象",truth:"solved",emoji:"🌊",caution:2,
+  title:"深海でとらえた巨大な謎の音「ザ・ブループ」",
+  excerpt:"未知の巨大生物の声か？と騒がれた、深海の超低周波音。",
+  body:`1997年、アメリカ海洋大気庁（NOAA）が、太平洋の深海でとてつもなく強力な超低周波の音をとらえた。ヒトの耳にはそのままでは聞こえないほど低い音だったが、その規模はけた外れだった。
+
+なにしろ、この音は数千キロも離れた複数の観測点で同時に記録されたのだ。地球上でもっとも大きな声を出すとされるシロナガスクジラでさえ、声が届く距離はせいぜい数百キロ。それをはるかに超える音だった。
+
+しかも、音の質はどこか生物の鳴き声に似ていた。そこから「まだ人類が見つけていない、巨大な深海生物の声ではないか」という想像がふくらみ、この音は「ブループ」と名付けられて世界中の話題をさらった。
+
+だが、NOAAによるその後の分析で、音の正体は生物ではなかった。南極周辺の巨大な氷山が割れたり、海底をこすったりするときに生じる「氷震（アイスクエイク）」の音と一致したのだ。
+
+つまり、深海の怪物の正体は、巨大な氷だったというわけだ。ロマンのある話ではなくなったが、こうして謎は科学的に解決された。`,
+  src:"https://ja.wikipedia.org/wiki/ブループ"},
+
+ {cat:"失踪・消失",truth:"maybe",emoji:"🪵",caution:2,
+  title:"消えた入植地「ロアノークの失われた植民地」",
+  excerpt:"戻ってみると村は無人。手がかりは木に刻まれた一語だけだった。",
+  body:`1587年、イングランドからの入植者たちが、現在のアメリカ・ノースカロライナ州にあるロアノーク島に住み着いた。その数は男女・子どもあわせて百人あまり。この地では、新大陸で最初に生まれたイングランド人の子ども、ヴァージニア・デアも誕生している。
+
+入植地の責任者ジョン・ホワイトは、物資を補給するためにいったんイングランドへ戻った。本来なら数か月で帰るはずだったが、当時イングランドはスペインと戦争状態にあり、船はすべて戦争に徴用されてしまう。ホワイトが島へ戻れたのは、なんと約3年後の1590年だった。
+
+ようやくたどり着いたホワイトを待っていたのは、もぬけの殻となった入植地だった。百人以上いたはずの人々は一人残らず消え、争った跡も遺体も見当たらない。家屋などはきちんと解体されており、慌てて逃げたというより、計画的に立ち去ったようにも見えた。
+
+唯一の手がかりは、柵の柱に刻まれた「CROATOAN（クロアトアン）」という一語と、近くの木に刻まれた「CRO」の文字だった。ホワイトは出発前に、移動する際は行き先を、危険な状況なら十字を刻むよう指示していた。十字は無かった。
+
+クロアトアンは近くの島の名で、友好的な先住民が住んでいた。入植者たちはそこへ移ったのかもしれない。だが嵐に阻まれ、ホワイトは島を捜索できないまま帰国してしまう。彼らの行方は、ついに確かめられなかった。この入植地は「失われた植民地」として知られている。`,
+  src:"https://ja.wikipedia.org/wiki/ロアノーク植民地"},
+ {cat:"ホラー・心霊",truth:"unknown",emoji:"👻",caution:4,
+  title:"史上最も調査された幽霊騒動「エンフィールドの心霊現象」",
+  excerpt:"家具が動き、子どもが宙に浮く。記録に残る最長級のポルターガイスト。",
+  body:`1977年、イギリス・ロンドン北部のエンフィールドにある町営住宅で、母親と4人の子どもが暮らす一家を、奇妙な現象が襲い始めた。
+
+家具がひとりでに動いたり倒れたりし、壁を叩くような音が鳴り、子どもが宙に浮いたとまで証言された。この騒動は、記録に残るポルターガイスト現象としては最も長く続き、最も詳しく調査された事例のひとつとされている。
+
+調査にあたったのは英国心霊調査協会のメンバーで、数か月の調査中に記録された怪現象は1500件を超えたという。目撃したのは家族だけでなく、調査員、近隣住民、警官、報道関係者にも及び、録音テープや写真、映像にも残された。
+
+一方で、子どもが物音を立てて大人をからかっていた場面もあったとされ、「すべては仕掛けだったのでは」という見方も根強い。
+
+本物の心霊現象だったのか、それとも巧妙ないたずらだったのか。これほど大量の記録が残っているにもかかわらず、決着はついていない。映画『死霊館 エンフィールド事件』の題材にもなった、世界的に有名な事件だ。`,
+  src:"https://ja.wikipedia.org/wiki/エンフィールドのポルターガイスト"},
+
+ {cat:"ホラー・心霊",truth:"maybe",emoji:"🏚️",caution:4,
+  title:"作られた恐怖だった？「アミティヴィルの“悪魔の棲む家”」",
+  excerpt:"一家惨殺の家で起きたという怪奇現象。だが、その多くは創作だった。",
+  body:`1974年、アメリカ・ニューヨーク州アミティヴィルの大きな邸宅で、凄惨な事件が起きた。一家の長男が、就寝中の両親と4人の弟妹をライフルで射殺したのだ。彼は「家の中の“何者かの声”に命じられた」と主張したが、有罪となった。
+
+その約1年後、この家をラッツ一家が購入して移り住む。だが彼らは、わずか1か月ほどで「悪魔のような怪奇現象に襲われた」として家を手放したと語った。この体験をもとにした本『悪魔の棲む家』が大ベストセラーとなり、映画化もされて、アミティヴィルは「世界一有名な幽霊屋敷」として知られるようになった。
+
+ところが後に、この“心霊体験”にはかなりの脚色や作り話が含まれていたことが指摘されている。殺人事件の弁護士とラッツ夫妻が、出版や裁判を有利にするために話を作り上げたという見方が有力だ。実際、その後この家に住んだ人々は「怪奇現象は一度もなかった」と証言している。
+
+惨劇そのものは実際に起きた事件だが、“呪われた家”の物語のほうは、作られた恐怖だった可能性が高い。`,
+  src:"https://ja.wikipedia.org/wiki/オーシャン・アベニュー112番地"},
+
+ {cat:"ホラー・心霊",truth:"maybe",emoji:"🕯️",caution:3,
+  title:"イングランド最恐の幽霊屋敷「ボーリー牧師館」",
+  excerpt:"修道女の霊、鳴り響くベル、2000件の怪現象。今は焼け落ちて無い。",
+  body:`ボーリー牧師館は、かつてイギリス・エセックス州の村に建っていた屋敷で、「イングランドで最も幽霊が出る家」として世界的に知られた。
+
+1863年に牧師の住居として建てられたこの館では、修道女や馬車の幽霊が目撃されたり、誰もいないはずなのにベルの音やささやき声が聞こえたりする、といった怪現象が古くから報告されていた。特に1930年代にある一家が住んでいた頃には、2000件にものぼる心霊現象が起きたとされる。
+
+1937年には、有名な超常現象研究家ハリー・プライスがこの館に住み込んで調査を行い、その報告を本にまとめて出版したことで、館の名はいっそう広まった。
+
+ただし、プライスの調査手法には疑問の声もあり、報告された現象の多くは思い込みや演出、ありふれた自然現象だったのではないか、とも言われている。
+
+館は1939年に焼失し、今はもう残っていない。それでも、“最恐の幽霊屋敷”という伝説だけは、今も語り継がれている。`,
+  src:"https://ja.wikipedia.org/wiki/ボーリー牧師館"},
+
+ {cat:"感動",truth:"fact",emoji:"🐕",caution:1,
+  title:"主人の帰りを待ち続けた犬「忠犬ハチ公」",
+  excerpt:"もう帰らない主人を、来る日も来る日も駅で待った秋田犬の実話。",
+  body:`渋谷駅前で待ち合わせの目印として親しまれる「ハチ公」の銅像。そのモデルになったのは、実在した一匹の秋田犬だ。
+
+ハチの飼い主は、東京帝国大学の教授・上野英三郎。大の愛犬家だった上野は、出かけるときにハチを連れて渋谷駅まで歩き、帰りもこの駅でハチに迎えられるのを日課にしていた。
+
+ところが1925年、上野は出先で突然亡くなってしまう。もう、主人が駅に帰ってくることはない。それでもハチは、来る日も来る日も、主人を迎えるために渋谷駅へ通い続けた。
+
+最初は事情を知らない人に追い払われたり、いじめられたりすることもあった。しかしやがて「主人を待ち続ける犬」として評判が広まり、人々に可愛がられるようになる。ハチが駅へ通った歳月は、主人の死からハチ自身が亡くなるまで、およそ10年にわたったとされる。
+
+飼い主への一途な想いは、いまも多くの人の胸を打つ。渋谷の銅像は、その実話の記憶を静かに伝えている。`,
+  src:"https://ja.wikipedia.org/wiki/忠犬ハチ公"},
+
+ {cat:"恋愛",truth:"fact",emoji:"🚢",caution:1,
+  title:"沈む船で夫と最期を共にした妻「タイタニックのストラウス夫妻」",
+  excerpt:"救命ボートの席を勧められた妻は、夫を残して逃げることを拒んだ。",
+  body:`1912年、「決して沈まない船」と謳われた豪華客船タイタニック号が、処女航海の途中で氷山に衝突し、沈み始めた。救命ボートは、乗船者の半分ぶんしか用意されていなかった。
+
+一等船客の中に、アメリカの百貨店メイシーズの経営者イジドー・ストラウスと、妻のアイダがいた。「女性と子どもを優先」という方針のなか、高齢のイジドーには例外的にボートへ乗ることが認められようとした。
+
+だがイジドーは、ほかの男性たちを差し置いて自分が先に助かることを潔しとせず、これを断った。すると妻のアイダもまた、夫だけを残してボートに乗ることを拒んだ。長年連れ添った夫と、最期まで共にいることを選んだのだ。アイダは自分の毛皮のコートを使用人に渡し、夫のそばに残ったと伝えられている。
+
+二人の名は、後に発表された千五百人あまりの犠牲者の名簿に、並んで記されていた。極限の状況で示された夫婦の絆は、今なお語り継がれている。`,
+  src:"https://ja.wikipedia.org/wiki/イジドー・ストラウス"},
+
+ {cat:"友情",truth:"fact",emoji:"🎄",caution:1,
+  title:"敵同士が一夜だけ手を取り合った「クリスマス休戦」",
+  excerpt:"撃ち合っていた兵士たちが、塹壕を出て握手し、贈り物を交わした。",
+  body:`1914年12月、第一次世界大戦の西部戦線。塹壕をはさんでドイツ軍とイギリス軍がにらみ合い、すでに多くの命が失われていた。「数か月で終わる」と思われた戦争は、泥沼化しつつあった。
+
+そんなクリスマスイブの夜、異変が起きる。ドイツ側の塹壕から、クリスマスキャロルの歌声が聞こえてきたのだ。すると、イギリス側も聖歌で応えた。歌が、敵と味方のあいだを行き来した。
+
+やがて兵士たちは、武器を置いて塹壕の外へ出ていく。両軍のあいだに広がる「無人地帯」で、つい先ほどまで撃ち合っていた者同士が握手を交わし、たばこや食べ物を贈り合い、戦死者の埋葬を手伝い合った。一部ではサッカーに興じたとも伝えられる。
+
+この休戦は、条約に基づくものではない。前線の兵士たちが、自分たちの意思で生み出したものだった。数日後、戦争は再開され、二度と同じ規模の休戦は起きなかった。
+
+それでも、敵同士が一夜だけ「人」として向き合ったこの出来事は、戦争の歴史に残る“奇跡”として、今も語り継がれている。`,
+  src:"https://ja.wikipedia.org/wiki/クリスマス休戦"},
+ {cat:"歴史のミステリー",truth:"maybe",emoji:"🏜️",caution:1,
+  title:"空からしか見えない巨大な絵「ナスカの地上絵」",
+  excerpt:"動物や直線が大地に刻まれている。なぜ、空からしか見えない絵を？",
+  body:`ペルーの乾いた平原に、巨大な絵や直線が無数に描かれている。「ナスカの地上絵」だ。ハチドリやサル、クモといった動物、幾何学模様、そして何キロにもおよぶまっすぐな線が、地表に刻まれている。
+
+あまりに大きいため、その全体像は上空からでないとはっきり見えない。およそ2000年前の古代ナスカの人々が、地表の黒っぽい石を取り除いて下の明るい地面を見せることで描いた、と考えられている。
+
+最大の謎は、その目的だ。空からしか見渡せない絵を、なぜ、誰のために描いたのか。天文学的なカレンダー説、雨乞いなどの儀式説、水源を示す目印説など、さまざまな説が唱えられてきたが、決着はついていない。
+
+近年もドローンやAIを使った調査で新たな地上絵が次々と見つかっており、全容はいまだ明らかになっていない。実在する世界遺産でありながら、その意味は今も謎に包まれている。`,
+  src:"https://ja.wikipedia.org/wiki/ナスカの地上絵"},
+
+ {cat:"歴史のミステリー",truth:"maybe",emoji:"⛰️",caution:1,
+  title:"誰が、何のために積んだのか「ストーンヘンジ」",
+  excerpt:"数十トンの巨石が円を描く。重機もない時代に、どうやって？",
+  body:`イギリス南部の平原に、巨大な石が円を描くように並ぶ遺跡がある。「ストーンヘンジ」だ。数トンから数十トンもある石が立てられ、一部はその上に横石を渡して、門のような形を作っている。
+
+建造はおよそ4000～5000年前にさかのぼるとされ、長い年月をかけて段階的に造られたと考えられている。
+
+最大の謎は、「何のために造られたのか」「どうやって巨石を運び、立てたのか」だ。夏至や冬至の太陽が昇る方向と石の配置が一致することから、天体観測や暦のため、あるいは宗教的な儀式や埋葬の場だったとする説がある。
+
+しかも一部の石は、200キロ以上も離れた土地から運ばれてきたことが分かっている。重機のない時代に、人々がどうやってそれを成し遂げたのか。確かにそこに存在するのに、その目的も方法も、完全には解明されていない。`,
+  src:"https://ja.wikipedia.org/wiki/ストーンヘンジ"},
+
+ {cat:"歴史のミステリー",truth:"maybe",emoji:"🗺️",caution:2,
+  title:"南極を“氷の前”の姿で描いた？「ピリ・レイスの地図」",
+  excerpt:"500年前の地図に、まだ知られないはずの大陸が描かれている、という主張。",
+  body:`1513年、オスマン帝国の提督ピリ・レイスが作成したとされる古い世界地図がある。1929年にこの地図が発見されると、後に大きな議論を呼ぶことになった。
+
+地図には大西洋をはさんだ大陸の海岸線が描かれているが、一部の解釈では「当時まだ知られていないはずの南極大陸の海岸線が、しかも氷に覆われる前の姿で描かれている」と主張された。これが「太古に高度な文明があった証拠では」とする説の根拠とされた。
+
+しかし、多くの研究者はこの解釈に否定的だ。描かれているのは南アメリカの海岸線が引き伸ばされたものなど、当時知られていた知識や推測の範囲で説明できる、とされている。
+
+実在する歴史的な地図ではあるが、「失われた古代の知識の証拠」という主張のほうは、根拠が乏しい、というのが大方の見方だ。`,
+  src:"https://ja.wikipedia.org/wiki/ピリ・レイスの地図"},
+
+ {cat:"UFO・宇宙人",truth:"maybe",emoji:"🛸",caution:2,
+  title:"円盤か、気球か「ロズウェル事件」",
+  excerpt:"軍が「空飛ぶ円盤を回収」と発表。だが直後に訂正した。",
+  body:`1947年、アメリカ・ニューメキシコ州ロズウェル近郊の牧場で、正体不明の残骸が見つかった。当初、地元の陸軍航空基地は「空飛ぶ円盤を回収した」と発表し、大騒ぎになる。
+
+ところがその直後、軍は「回収したのは気象観測用の気球だった」と発表を訂正した。この急な訂正が、かえって「本当はUFOを隠したのでは」という疑念を呼ぶことになる。
+
+事件はしばらく忘れられていたが、後年になって「墜落したのは宇宙船で、宇宙人の遺体も回収された」という証言が次々と現れ、ロズウェルは世界中でUFO伝説の象徴となった。
+
+アメリカ政府は後に、残骸の正体はソ連の核実験を監視するための極秘の偵察気球計画によるものだったと説明している。それでも「本当に気球だったのか」をめぐる議論は、今も尽きることがない。`,
+  src:"https://ja.wikipedia.org/wiki/ロズウェル事件"},
+
+ {cat:"UFO・宇宙人",truth:"solved",emoji:"🌾",caution:1,
+  title:"宇宙人のしわざ？だった「ミステリー・サークル」",
+  excerpt:"一晩で畑に現れる巨大模様。その多くは、人の手によるものだった。",
+  body:`ある朝、麦畑などに突然、巨大で精密な幾何学模様が出現する——「ミステリー・サークル（クロップ・サークル）」と呼ばれる現象だ。1970～80年代以降、特にイギリスで数多く報告され、その複雑さから「宇宙人のしわざ」「未知のエネルギー」などと騒がれた。
+
+模様は年を追うごとに精巧になり、しかも夜のうちに誰にも見られることなく作られる点が、謎を深めていた。
+
+ところが1991年、イギリスの二人の男性が「自分たちが板とロープを使い、夜のうちに麦を踏み倒して模様を作っていた」と告白し、実際にやってみせた。これをきっかけに、多くのサークルが人の手による“いたずら”や作品だったことが明らかになっていく。
+
+すべてが説明されたわけではないという声もあるが、有名な事例の多くは人為的に作られたものだった、というのが現在の理解だ。`,
+  src:"https://ja.wikipedia.org/wiki/ミステリー・サークル"},
+
+ {cat:"失踪・消失",truth:"maybe",emoji:"✈️",caution:2,
+  title:"世界一周の途中で消えた飛行士「アメリア・イアハート」",
+  excerpt:"伝説の女性パイロットは、太平洋上で通信を最後に消息を絶った。",
+  body:`アメリア・イアハートは、女性で初めて大西洋の単独横断飛行に成功するなど、数々の記録を打ち立てたアメリカの伝説的な飛行士だ。
+
+1937年、彼女は飛行機による世界一周に挑んでいた。だが太平洋に浮かぶ小さな島を目指して飛行中、無線連絡を最後に消息を絶ってしまう。大規模な捜索が行われたが、機体も、彼女の姿も見つからなかった。
+
+彼女がどこでどうなったのかは、今も分かっていない。燃料が尽きて海に墜落したという説のほか、無人島に不時着して生き延びようとしたが力尽きた、とする説などもあり、関係するとみられる遺物の調査が今も続けられている。
+
+20世紀を代表する飛行士の突然の失踪は、いまなお航空史上最大の謎のひとつとして語り継がれている。`,
+  src:"https://ja.wikipedia.org/wiki/アメリア・イアハート"},
+
+ {cat:"失踪・消失",truth:"maybe",emoji:"🪂",caution:2,
+  title:"大金を抱え夜空へ消えた男「D・B・クーパー」",
+  excerpt:"旅客機を乗っ取り、パラシュートで飛び降りたまま行方不明に。",
+  body:`1971年、アメリカで前代未聞のハイジャック事件が起きた。「D・B・クーパー」と呼ばれる男が旅客機を乗っ取り、多額の現金とパラシュートを要求したのだ。
+
+要求が満たされると、男は乗客を解放し、飛行機にそのまま飛行を続けさせた。そして飛行中、後部の扉から現金を抱えてパラシュートで夜の空へ飛び降り、そのまま姿を消した。
+
+その後、男は二度と発見されなかった。無事に逃げおおせたのか、それとも降下の途中で命を落としたのかすら分からない。数年後、川辺で要求された紙幣の一部が見つかったが、男の正体や行方を解く決定打にはならなかった。
+
+FBIは長年にわたり捜査を続けたが、結局この事件は未解決のまま終わった。アメリカで唯一“迷宮入り”した航空機ハイジャック事件として知られている。`,
+  src:"https://ja.wikipedia.org/wiki/D・B・クーパー"},
+
+ {cat:"失踪・消失",truth:"maybe",emoji:"🧭",caution:2,
+  title:"本当に“魔の海域”なのか「バミューダトライアングル」",
+  excerpt:"船や飛行機が消える呪われた海。だが、その正体は意外なものだった。",
+  body:`大西洋に浮かぶ三つの地点——アメリカのフロリダ、プエルトリコ、バミューダ諸島——を結ぶ三角形の海域。「バミューダトライアングル」と呼ばれ、船や航空機が次々と謎の失踪を遂げる「魔の海域」として、世界的に有名になった。
+
+20世紀の半ばから、この海域での遭難や行方不明が「異常に多い」「磁場の乱れや未知の力が原因では」と語られ、ときに超常現象やUFOと結びつけられてきた。
+
+しかし、冷静に調べると話は変わってくる。この海域はもともと船や飛行機の交通量が非常に多く、ハリケーンの通り道でもある。そのため、事故の“件数”自体は不自然に多いわけではない、という指摘が有力だ。
+
+有名な“魔の三角海域”の伝説は、誇張やセンセーショナルな脚色によって大きく膨らんだ面が強い、というのが現在の見方である。`,
+  src:"https://ja.wikipedia.org/wiki/バミューダトライアングル"},
+
+ {cat:"未解決事件",truth:"maybe",emoji:"🔪",caution:5,
+  title:"正体不明の連続殺人犯「切り裂きジャック」",
+  excerpt:"19世紀ロンドンを恐怖に陥れた犯人は、ついに捕まらなかった。",
+  body:`1888年、イギリス・ロンドンの貧しい地区イーストエンドで、女性が相次いで惨殺される事件が起きた。その手口の残虐さから世間は震え上がり、犯人はいつしか「切り裂きジャック」と呼ばれるようになった。
+
+犯人が捕まらないまま、新聞社や警察には犯行をほのめかす手紙が届き、事件は世界中の注目を集めた（ただし、それらの手紙の多くは偽物だったともいわれている）。
+
+当時の捜査技術では決定的な証拠をつかむことができず、容疑者として多くの人物の名が挙がったものの、結局、誰が犯人だったのかは特定できなかった。
+
+百年以上が過ぎた今も、研究者たちはさまざまな説を唱え続けている。「史上最も有名な未解決事件」のひとつとして、その正体は永遠の謎となっている。`,
+  src:"https://ja.wikipedia.org/wiki/切り裂きジャック"},
+
+ {cat:"未解決事件",truth:"maybe",emoji:"🔣",caution:4,
+  title:"暗号を残した連続殺人犯「ゾディアック事件」",
+  excerpt:"「解けば正体が分かる」。犯人はそう挑発し、消えていった。",
+  body:`1960年代後半から1970年代はじめにかけて、アメリカ・カリフォルニア州で、若いカップルなどが次々と襲われる連続殺人事件が起きた。犯人は自らを「ゾディアック」と名乗り、警察や新聞社に挑発的な手紙を送りつけた。
+
+その手紙には、さまざまな記号を組み合わせた暗号が含まれていた。「これを解けば自分の正体が分かる」と犯人は挑発したが、当時は完全には解読できなかった。
+
+劇場型の犯行と、おびただしい数の手紙で世間を恐怖に陥れたゾディアックだが、ついに逮捕されることはなかった。確認された犠牲者は数名だが、犯人は手紙のなかで「もっと多くを殺した」と主張していた。
+
+暗号の一部は2020年になって解読されたものの、肝心の犯人の正体は、いまだ特定されていない。`,
+  src:"https://ja.wikipedia.org/wiki/ゾディアック事件"},
+
+ {cat:"未解決事件",truth:"maybe",emoji:"🥀",caution:5,
+  title:"報道が過熱した迷宮入り事件「ブラック・ダリア事件」",
+  excerpt:"1947年、ロサンゼルスで起きた凄惨な殺人。犯人は今も不明。",
+  body:`1947年、アメリカ・ロサンゼルスで、若い女性の遺体が空き地で発見された。あまりに凄惨な状態だったこの事件は、被害者につけられた通称から「ブラック・ダリア事件」と呼ばれ、アメリカ犯罪史に残る未解決事件となった。
+
+事件は連日大々的に報道され、新聞社には犯人を名乗る人物からの連絡が届くなどして、世間の関心は過熱した。多くの人物が容疑者として疑われ、自ら犯行を「告白」する者まで相次いだが、いずれも決め手を欠いた。
+
+膨大な捜査が行われたにもかかわらず、犯人は特定されないまま時が過ぎていった。今日に至るまで、誰が、なぜこの事件を起こしたのかは分かっていない。報道のあり方をめぐっても、後々まで語られる事件となった。`,
+  src:"https://ja.wikipedia.org/wiki/ブラック・ダリア事件"},
+
+ {cat:"自然の怪現象",truth:"maybe",emoji:"💥",caution:3,
+  title:"クレーターのない大爆発「ツングースカ大爆発」",
+  excerpt:"森が数千万本なぎ倒された。なのに、隕石の穴が見つからない。",
+  body:`1908年、ロシア・シベリアのツングースカ川付近の上空で、とてつもない大爆発が起きた。その威力は凄まじく、半径数十キロにわたって木々がなぎ倒され、その数は数千万本にもおよんだとされる。爆発の閃光や衝撃は、遠く離れた場所でも観測された。
+
+ところが、これほどの爆発が起きたにもかかわらず、現場には大きな隕石の衝突跡（クレーター）が見つからなかった。これが長年の謎を生むことになる。
+
+現在では、巨大な隕石か彗星の核が、地表に達する前に空中で爆発・分解した、とする説がもっとも有力とされている。
+
+それでも、肝心の天体そのものの大きな破片がはっきりと確認されていないことなどから、細かい点については今も議論が続いている。`,
+  src:"https://ja.wikipedia.org/wiki/ツングースカ大爆発"},
+
+ {cat:"自然の怪現象",truth:"fact",emoji:"🔥",caution:1,
+  title:"マストの先に灯る青白い炎「セント・エルモの火」",
+  excerpt:"嵐の夜、船や飛行機の先端がぼうっと光る。怪火の正体とは。",
+  body:`嵐の夜、船のマストの先や、飛行機の翼の先端などが、青白い光を放ってぼうっと輝くことがある。古くから船乗りたちに知られてきたこの現象は、「セント・エルモの火」と呼ばれる。
+
+かつては、守護聖人が船を守ってくれる印として歓迎されたり、逆に不吉の前兆として恐れられたりした。とがった部分から、音を伴って光が立ちのぼる様子は、まさに“怪火”そのものだった。
+
+現在では、その正体は科学的に説明されている。雷雲などで空気が強く帯電したとき、とがった物体の先端で放電が起き、まわりの空気が発光する現象（コロナ放電）だ。
+
+正体は分かっているが、自然が見せるこの幻想的な光景は、今も人々を惹きつけてやまない。`,
+  src:"https://ja.wikipedia.org/wiki/セント・エルモの火"},
+
+ {cat:"オーパーツ・遺物",truth:"maybe",emoji:"🗿",caution:1,
+  title:"絶海の孤島に立ち並ぶ巨石像「モアイ」",
+  excerpt:"重機もない時代に、巨大な石像をどうやって運び、立てたのか。",
+  body:`南太平洋に浮かぶ絶海の孤島、イースター島。この島には、巨大な人面の石像「モアイ」が、数百体も立ち並んでいる。高さは数メートル、重いものでは数十トンにもなる。
+
+これらを造ったのは、かつてこの島で暮らした人々だ。だが、重機もない時代に、どうやって巨大な石像を切り出し、運び、立てたのかは、長く謎とされてきた。「モアイが自分で歩いた」という島の言い伝えも残っている。
+
+近年の実験では、複数の人がロープを使って像を左右に揺らしながら、“歩かせる”ように前進させられることが示され、運搬方法の有力な手がかりとなった。
+
+なぜこれほど多くのモアイが造られ、そしてある時期に一部が倒されたのか。島の文明の盛衰とともに、その全貌にはなお謎が残されている。`,
+  src:"https://ja.wikipedia.org/wiki/モアイ"},
+
+ {cat:"オーパーツ・遺物",truth:"solved",emoji:"💀",caution:2,
+  title:"古代の遺物ではなかった「水晶髑髏」",
+  excerpt:"超古代文明の神秘の遺物とされたが、分析で意外な事実が。",
+  body:`透明な水晶を、人間の頭蓋骨そっくりに削り出した「水晶髑髏（クリスタル・スカル）」。マヤやアステカといった古代文明の遺物とされ、「未知の技術で作られた」「超自然的な力を持つ」などと語られて、世界的に有名になった。
+
+その精巧な作りと、古代にどうやって硬い水晶をここまで加工できたのか、という点が、神秘性をいっそう高めていた。
+
+しかし、博物館などが所蔵する有名な水晶髑髏を科学的に分析した結果、表面には、古代にはなかったはずの近代的な工具（回転式の研磨機）で削られた痕が見つかった。
+
+つまりこれらは、古代の遺物ではなく、19世紀以降に作られたものである可能性が高い、と結論づけられている。神秘の遺物の正体は、比較的新しい時代の“作品”だった。`,
+  src:"https://ja.wikipedia.org/wiki/水晶髑髏"},
+
+ {cat:"オーパーツ・遺物",truth:"fact",emoji:"🛕",caution:1,
+  title:"1600年錆びない鉄の柱「デリーの鉄柱」",
+  excerpt:"古代インドの鉄柱は、なぜ今もほとんど錆びていないのか。",
+  body:`インドの首都デリーの近郊に、高さ7メートルほどの鉄の柱が立っている。建てられたのは、なんと約1600年も前。にもかかわらず、これほどの歳月を経ても、ほとんど錆びていないのだ。
+
+鉄は本来、湿気の多い環境では錆びてぼろぼろになっていくもの。古代に作られたこの柱が、長い年月をくぐり抜けてなお形を保っていることは、長く「不思議」として語られてきた。
+
+研究の結果、その秘密が見えてきた。柱の表面には、鉄に含まれるリンなどの成分と気候が組み合わさってできた保護膜があり、これが錆の進行を防いでいる、と考えられている。
+
+超自然の力ではなく、当時の高い製鉄技術と環境が生んだ“錆びない鉄柱”。実在する、古代技術の驚異だ。`,
+  src:"https://ja.wikipedia.org/wiki/デリーの鉄柱"},
+
+ {cat:"ホラー・心霊",truth:"fact",emoji:"🪜",caution:3,
+  title:"増築が止まらなかった奇妙な家「ウィンチェスター・ミステリー・ハウス」",
+  excerpt:"どこにも通じない階段、壁にぶつかるドア。霊を恐れた末の家。",
+  body:`アメリカ・カリフォルニア州に、ひときわ奇妙な大邸宅がある。「ウィンチェスター・ミステリー・ハウス」と呼ばれるその家は、銃で巨万の富を築いた一族の未亡人、サラ・ウィンチェスターが建てたものだ。
+
+この家は、約38年間にわたって増改築が延々と続けられた。その結果、部屋数は百を超え、どこにも通じない階段、壁に突き当たるドア、行き止まりの廊下といった、意味不明な構造が無数に生まれた。
+
+なぜそんな家を造り続けたのか。「銃の犠牲になった人々の霊を恐れ、霊を惑わせる（あるいはなだめる）ために増築をやめなかった」という言い伝えが広まり、家は“呪われた屋敷”として有名になった。
+
+ただし、この動機が本当だったのかには諸説ある。奇妙な構造の家が実在することは確かだが、その理由をめぐる物語のほうには、後世の脚色も含まれているとみられている。`,
+  src:"https://ja.wikipedia.org/wiki/ウィンチェスター・ミステリー・ハウス"},
+
+ {cat:"ホラー・心霊",truth:"solved",emoji:"🧚",caution:1,
+  title:"大人たちを欺いた妖精写真「コティングリー妖精事件」",
+  excerpt:"少女が撮った“妖精との写真”を、あの文豪までもが信じた。",
+  body:`1917年、イギリスの二人の少女が「庭で妖精と遊んだ」として、妖精と一緒に写った写真を撮影した。この写真は世間に広まり、シャーロック・ホームズの作者コナン・ドイルまでもが「本物だ」と信じて発表したことで、大きな話題となった。
+
+当時は写真技術への理解も今ほどではなく、「妖精は実在するのか」と真剣に議論された。
+
+しかし数十年後、年老いた当人たちが真相を告白する。妖精は、本の挿絵などを切り抜いて作った紙の人形で、それを庭に立てて撮影したものだった、と認めたのだ。
+
+こうして「世界一有名な妖精写真」は、少女たちのいたずらだったことが明らかになった。多くの大人を信じ込ませた、写真をめぐる有名な“作り話”の事件として知られている。`,
+  src:"https://ja.wikipedia.org/wiki/コティングリー妖精事件"},
+
+ {cat:"感動",truth:"maybe",emoji:"🐶",caution:1,
+  title:"スコットランド版の忠犬「グレーフライアーズ・ボビー」",
+  excerpt:"亡き主人の墓を、14年間も見守り続けたといわれる犬の物語。",
+  body:`イギリス・スコットランドのエディンバラに、「ハチ公」によく似た忠犬の物語が伝わっている。スカイ・テリアという犬種の「ボビー」だ。
+
+ボビーの飼い主は、市の夜警を務めていたジョン・グレイ。グレイは1858年に亡くなり、グレーフライアーズ教会の墓地に葬られた。すると、残されたボビーは、来る日も来る日も主人の墓のそばを離れようとしなかったという。
+
+その姿は人々の心を打ち、エディンバラの市民や市長にも守られながら、ボビーは14年もの間、主人を見守り続けたと伝えられる。1872年に死ぬまで、墓地のそばで過ごしたという。
+
+現在、教会の近くにはボビーの銅像が立ち、観光客に愛されている。なお、近年は「物語は一部、美化・脚色されているのでは」という研究もあるが、人々を惹きつける“忠犬の実話”として語り継がれている。`,
+  src:"https://ja.wikipedia.org/wiki/グレーフライアーズ・ボビー"},
+
+ {cat:"感動",truth:"fact",emoji:"🐾",caution:1,
+  title:"南極を生き抜いた兄弟犬「タロとジロ」",
+  excerpt:"無人の基地に置き去りにされた犬たちが、1年後に生きていた。",
+  body:`1957年、日本の第1次南極観測隊は、そりを引く樺太犬（カラフト犬）たちとともに南極へ渡った。ところが翌1958年、悪天候のため次の隊との交代に失敗。15頭の犬たちは、鎖につながれたまま、無人となった昭和基地に置き去りにせざるを得なくなった。
+
+誰もが、極寒の南極で犬たちが生き延びるのは無理だと思っていた。
+
+しかし約1年後の1959年、次の観測隊が基地にたどり着くと、2頭の犬が生きていた。兄弟犬の「タロ」と「ジロ」だった。鎖につながれていた7頭は息絶え、鎖を抜けた6頭は行方知れず。そのなかで、この2頭だけが奇跡的に生き抜いていたのだ。
+
+このニュースは日本中に感動を呼び、のちに映画『南極物語』のもとにもなった。タロはその後帰国し、ジロは南極で生涯を終えた。過酷な地を生き抜いた兄弟犬の物語は、今も語り継がれている。`,
+  src:"https://ja.wikipedia.org/wiki/タロとジロ"},
+ {cat:"歴史のミステリー",truth:"fact",emoji:"📜",caution:1,
+  title:"洞窟で見つかった2000年前の巻物「死海文書」",
+  excerpt:"羊飼いの少年が偶然見つけた壺。中身は人類史を揺るがす古文書だった。",
+  body:`1947年、死海のほとりの洞窟で、一人の羊飼いの少年が偶然、古い壺に入った巻物を見つけた。これが「死海文書」と呼ばれる、世紀の大発見の始まりだった。
+
+その後の調査で、周辺の洞窟から大量の写本の断片が次々と発見された。書かれたのは、およそ2000年前。旧約聖書の最古級の写本などを含み、当時のユダヤ社会や聖書の成り立ちを知るうえで、きわめて貴重な資料とされている。
+
+誰が、なぜこれほど大量の文書を人里離れた洞窟に隠したのか。すべての断片が何を意味するのか。研究をめぐっては、今も議論が続いている。
+
+作り話ではなく、実在し、聖書研究を大きく書き換えた本物の古文書だ。`,
+  src:"https://ja.wikipedia.org/wiki/死海文書"},
+
+ {cat:"歴史のミステリー",truth:"maybe",emoji:"🛐",caution:1,
+  title:"キリストを包んだ布？「トリノの聖骸布」",
+  excerpt:"古い布に浮かぶ男の全身像。本物の聖遺物か、中世の作か。",
+  body:`イタリア・トリノの大聖堂に、一枚の古い亜麻布が保管されている。「トリノの聖骸布」だ。布には、十字架にかけられたとされる男性の全身像が、うっすらと浮かび上がっている。
+
+古くから「イエス・キリストの遺体を包んだ布ではないか」と信じられ、多くの信者が崇敬してきた。像がどうやって布に写ったのかが科学的にも説明しづらく、いっそう謎を呼んだ。
+
+1980年代に行われた放射性炭素年代測定では「中世に作られたもの」という結果が出て、後世の作とする見方が強まった。しかし、測定した箇所が適切だったかなどをめぐって反論もあり、議論は今も続いている。
+
+本物の聖遺物なのか、精巧な中世の作品なのか。いまだ決着のつかない、世界一有名な“謎の布”だ。`,
+  src:"https://ja.wikipedia.org/wiki/トリノの聖骸布"},
+
+ {cat:"オーパーツ・遺物",truth:"maybe",emoji:"🔺",caution:1,
+  title:"どう積み上げた？「ギザの大ピラミッド」",
+  excerpt:"4500年前、重機もない時代に造られた古代世界の驚異。",
+  body:`エジプト・ギザにそびえる「大ピラミッド」。およそ4500年前に建てられたとされる、古代世界の驚異だ。もとの高さは140メートルを超え、平均2トンを上回る石材が、200万個以上も積み上げられている。
+
+最大の謎は、「重機もない時代に、どうやってこれほど巨大で精密な建造物を造ったのか」だ。石をどこからどう運び、どう積み上げ、どうやって正確な形に仕上げたのか。多くの説があるが、決定的な答えは出ていない。
+
+近年は内部に未知の空間が見つかるなど、調査のたびに新たな謎も生まれている。
+
+宇宙人が造ったといった話まで飛び交うが、実際には古代エジプト人の高い技術と組織力の結晶であり、その全貌の解明が今も進められている本物の遺跡だ。`,
+  src:"https://ja.wikipedia.org/wiki/ギザの大ピラミッド"},
+
+ {cat:"歴史のミステリー",truth:"maybe",emoji:"🏞️",caution:1,
+  title:"雲の上の失われた都市「マチュ・ピチュ」",
+  excerpt:"アンデスの尾根に築かれ、100年で放棄された天空の遺跡。",
+  body:`ペルーのアンデス山脈、標高2400メートルほどの尾根に、突如として現れる石造りの都市遺跡——「マチュ・ピチュ」だ。精巧な石組みの神殿や住居、段々畑が、雲をまとう山々の上に広がっている。
+
+15世紀ごろ、インカ帝国によって築かれたとされるが、文字記録がほとんど残されていないため、「何のために、こんな高地に造られたのか」がはっきりしない。皇帝の離宮、宗教的な聖地、天文観測の場など、さまざまな説がある。
+
+さらに、造られてから100年ほどで放棄されたとみられているが、その理由も定かではない。
+
+スペインの征服者にも知られないまま忘れ去られ、20世紀に“再発見”された。実在する世界遺産でありながら、いくつもの謎を抱えた天空の都市だ。`,
+  src:"https://ja.wikipedia.org/wiki/マチュ・ピチュ"},
+
+ {cat:"歴史のミステリー",truth:"fact",emoji:"🧹",caution:3,
+  title:"集団の狂気が人を殺した「セイラム魔女裁判」",
+  excerpt:"少女の発作から始まり、20人が「魔女」として処刑された実話。",
+  body:`1692年、アメリカ・マサチューセッツ州のセイラム村で、少女たちが突然、奇妙な発作を起こし始めた。その原因を「魔女のしわざだ」とされたことから、村は集団的な恐怖に飲み込まれていく。
+
+告発が告発を呼び、「魔女」とされた人々が次々と捕らえられた。まともな証拠もないまま裁判にかけられ、最終的に20人もの人々が処刑される事態となった。
+
+やがて熱狂は冷め、この裁判が誤りだったことが認められる。のちに関係者の名誉回復も行われた。
+
+これは超常現象の物語ではない。集団心理や偏見、根拠のない告発が、いかに無実の人々を死に追いやるか——実際に起きた、恐ろしい歴史的事件だ。`,
+  src:"https://ja.wikipedia.org/wiki/セイラム魔女裁判"},
+
+ {cat:"失踪・消失",truth:"maybe",emoji:"🛫",caution:3,
+  title:"239人を乗せ消えた旅客機「マレーシア航空370便」",
+  excerpt:"レーダーから消え、進路を変えて飛び続けた末に行方不明に。",
+  body:`2014年、乗客乗員239人を乗せたマレーシア航空370便が、クアラルンプールから北京へ向かう途中、レーダーから姿を消した。
+
+通信が途絶えたのち、軍のレーダーなどの記録から、機体は予定の進路を大きく外れ、引き返すように飛んだ可能性が指摘された。最終的には、燃料が尽きるまでインド洋の方角へ飛び続けた、と推定されている。
+
+大規模な捜索が続けられ、各地の海岸に機体の一部とみられる漂着物が見つかったものの、機体の本体や多くの手がかりは見つからないままだ。
+
+なぜ進路を変えたのか、機内で何が起きたのか。現代の航空史上もっとも大きな謎のひとつとして、いまも完全には解明されていない。`,
+  src:"https://ja.wikipedia.org/wiki/マレーシア航空370便墜落事故"},
+
+ {cat:"未解決事件",truth:"maybe",emoji:"💴",caution:2,
+  title:"誰も傷つけず3億円を奪った「三億円事件」",
+  excerpt:"白バイ警官を装った男が、芝居だけで現金輸送車を奪い去った。",
+  body:`1968年、東京都府中市で、現金輸送車が白バイ警官を装った一人の男に止められた。「車に爆弾が仕掛けられている」と告げられ、行員たちが車を降りたすきに、男は車ごと約3億円を奪って走り去った。
+
+誰も傷つけず、銃も使わず、巧妙な芝居だけで、当時としては途方もない額の現金を奪い去ったこの手口は、日本中を驚かせた。
+
+警察は大規模な捜査を行い、膨大な数の人物を調べたが、犯人を特定できなかった。やがて時効が成立し、事件は未解決のまま幕を閉じる。
+
+スマートすぎる手口から、犯人像をめぐってさまざまな推理が今も語られ続けている。日本でもっとも有名な未解決事件のひとつだ。`,
+  src:"https://ja.wikipedia.org/wiki/三億円事件"},
+
+ {cat:"未解決事件",truth:"maybe",emoji:"🍬",caution:3,
+  title:"「かい人21面相」の企業脅迫「グリコ・森永事件」",
+  excerpt:"菓子に毒を入れたと脅し、社会を恐怖に陥れた劇場型犯罪。",
+  body:`1984年から1985年にかけて、日本の大手菓子メーカーなどを次々と狙った、前代未聞の企業脅迫事件が起きた。
+
+犯人は、社長を誘拐したり、「商品に毒を入れた」と脅して企業に多額の金銭を要求したりした。さらに「かい人21面相」を名乗り、警察やマスコミに挑発的な文書を送りつけた。毒入りとされる菓子が実際に店頭に置かれるなど、社会を大きな不安に陥れた。
+
+警察は犯人を追い詰める場面もあったが、決定的なところで取り逃がし、ついに逮捕に至らなかった。
+
+やがて時効が成立し、事件は未解決のまま終わった。世間を巻き込んだ「劇場型犯罪」の代表例として、今も語り継がれている。`,
+  src:"https://ja.wikipedia.org/wiki/グリコ・森永事件"},
+
+ {cat:"予言・超能力",truth:"maybe",emoji:"🔮",caution:2,
+  title:"未来を見たのか「ノストラダムスの予言」",
+  excerpt:"曖昧な四行詩が、後世にさまざまな“予言”として読み解かれた。",
+  body:`16世紀フランスの医師にして占星術師、ノストラダムス。彼が残した『予言集』は、四行詩の形で書かれた数百もの“予言”を収め、後世に大きな影響を与えた。
+
+その詩は難解で、比喩や曖昧な表現に満ちている。後の時代の人々は、戦争や災害などの出来事を、これらの詩に当てはめて「ノストラダムスは予言していた」と語ってきた。
+
+しかし懐疑的な立場からは、詩があまりに曖昧であるために、起きた出来事に“後から”いくらでも結びつけられるだけだ、と指摘されている。
+
+本人が実在し、予言集を残したことは事実だが、それが本当に未来を“言い当てた”ものなのかについては、大いに議論がある。`,
+  src:"https://ja.wikipedia.org/wiki/ノストラダムス"},
+
+ {cat:"予言・超能力",truth:"maybe",emoji:"🥄",caution:1,
+  title:"スプーン曲げの超能力者「ユリ・ゲラー」",
+  excerpt:"本物の超能力か、卓越した手品か。世界を沸かせた論争。",
+  body:`1970年代、イスラエル出身のユリ・ゲラーは、「スプーン曲げ」や、念じて止まった時計を動かすといった“超能力”でテレビに登場し、世界的なブームを巻き起こした。日本でも大きな話題となった。
+
+彼は、自らの力を「本物の超能力」だと主張した。
+
+一方で、手品師や懐疑論者からは、「それらはすべて、巧みな手品（マジック）の技術で再現できる」と繰り返し指摘されてきた。実際、同じ現象をマジックとして見せる演者は数多くいる。
+
+超能力なのか、それとも卓越したパフォーマンスなのか。ユリ・ゲラーは実在の有名人だが、その“力”の正体をめぐっては、長く論争が続いている。`,
+  src:"https://ja.wikipedia.org/wiki/ユリ・ゲラー"},
+
+ {cat:"ホラー・心霊",truth:"unknown",emoji:"🏢",caution:3,
+  title:"日本中が注目した怪現象「富加町のポルターガイスト」",
+  excerpt:"物が動き、音が鳴る。原因は霊か、それとも建物の構造か。",
+  body:`1999年ごろから、岐阜県富加町のある町営住宅で、説明のつかない怪現象が相次いで報告された。
+
+誰も触れていないのに物が動く、ラップ音のような音が鳴る、女性の霊を見たという証言が住民から次々に上がった、などと伝えられている。騒ぎは次第に大きくなり、テレビでも取り上げられて全国的に知られるようになった。
+
+一方で、原因を探る調査も行われた。専門家の一人は、この住宅が水道水をポンプで上の階へ押し上げる特殊な構造だった点に注目し、配管の圧力が怪音の一因ではないか、と指摘している。
+
+心霊現象だったのか、それとも建物に由来する自然な現象だったのか。日本でもっとも有名なポルターガイスト騒動のひとつとして、今も語られている。`,
+  src:"https://ja.wikipedia.org/wiki/富加町のポルターガイスト"},
+
+ {cat:"UFO・宇宙人",truth:"maybe",emoji:"🚧",caution:2,
+  title:"UFO伝説の聖地「エリア51」",
+  excerpt:"地図に載らない秘密基地。宇宙人を隠している、という噂の真相は。",
+  body:`アメリカ・ネバダ州の砂漠にある、アメリカ空軍の極秘軍事施設「エリア51」。長年その存在すら公式には認められず、地図にも載らない“秘密基地”として知られてきた。
+
+周辺ではたびたび謎の飛行物体が目撃され、「墜落したUFOや宇宙人を、政府がここで研究・隠匿しているのではないか」という噂が広まった。これが、エリア51を世界的なUFO伝説の中心地にした。
+
+実際には、この施設は最新鋭の偵察機やステルス機など、極秘の軍用機を開発・試験する場所だったとみられている。目撃された“UFO”の多くは、こうした未公開の試作機だった可能性が高い。
+
+基地が実在することは確かだが、その内部で何が行われてきたのかは、今も多くがベールに包まれている。`,
+  src:"https://ja.wikipedia.org/wiki/エリア51"},
+
+ {cat:"歴史のミステリー",truth:"maybe",emoji:"🏝️",caution:1,
+  title:"海に沈んだ伝説の大陸「アトランティス」",
+  excerpt:"高度な文明が一夜で水没した、という古代から伝わる物語。",
+  body:`高度な文明を築きながら、一夜にして海中に沈んだとされる伝説の大陸「アトランティス」。
+
+この話のおおもとは、古代ギリシャの哲学者プラトンが、自らの著作の中で語ったものだ。強大で豊かな島国が、おごりから神々の怒りに触れ、海に飲み込まれた、という筋立てになっている。
+
+以来、人々は「アトランティスは本当にあったのか」「あるとすればどこか」を探し求めてきた。地中海から大西洋、果ては別の大陸まで、さまざまな候補地が唱えられてきた。
+
+しかし、その実在を裏づける確かな証拠は見つかっていない。多くの研究者は、プラトンが何かを伝えるために創作した“たとえ話”だった可能性が高い、とみている。実在の地なのか、壮大な寓話なのか——人々を魅了し続ける謎だ。`,
+  src:"https://ja.wikipedia.org/wiki/アトランティス"},
+
+ {cat:"感動",truth:"fact",emoji:"🛂",caution:1,
+  title:"命のビザを書き続けた外交官「杉原千畝」",
+  excerpt:"規則よりも人の命を選び、数千人のユダヤ難民を救った日本人。",
+  body:`第二次世界大戦中、リトアニアにいた日本の外交官・杉原千畝は、ナチス・ドイツの迫害から逃れようとする大勢のユダヤ人難民と向き合うことになった。
+
+彼らが助かるには、日本を通過するためのビザが必要だった。しかし、本国の方針はビザの発給に消極的だった。
+
+苦悩の末、杉原は自らの判断で、ビザを書き続けることを決める。連日、手が腫れるほどペンを走らせ、列車が発つ間際までビザを書き続けたと伝えられる。こうして発給された大量のビザによって、数千人ともいわれる人々の命が救われた。
+
+規則よりも人の命を選んだその決断は、のちに世界中で高く評価された。実在した一人の外交官による、実話の人道的行動だ。`,
+  src:"https://ja.wikipedia.org/wiki/杉原千畝"},
+
+ {cat:"未確認生物",truth:"maybe",emoji:"🦕",caution:2,
+  title:"世界一有名な湖の怪物「ネッシー」",
+  excerpt:"ネス湖に棲むという首長竜。だが有名な写真は“やらせ”だった。",
+  body:`イギリス・スコットランドのネス湖に棲むとされる、巨大な未確認生物「ネッシー」。長い首と大きな体を持つ、首長竜のような姿で語られることが多い。
+
+古くから目撃談はあったが、世界的に有名になったのは20世紀に入ってからだ。湖面から突き出た“首”を捉えたとされる一枚の写真が広まり、一大ブームを巻き起こした。
+
+しかし、その代表的な写真は、後に模型を使った“やらせ”だったと関係者が告白している。大規模な探査も何度か行われたが、ネッシーの存在を裏づける決定的な証拠は得られていない。
+
+正体は、大型の魚や流木、波の見間違いなどとする説が有力だ。それでもネッシーは、世界一有名な未確認生物として、今も人々の想像をかき立てている。`,
+  src:"https://ja.wikipedia.org/wiki/ネッシー"},
+
+ {cat:"未確認生物",truth:"maybe",emoji:"🦶",caution:2,
+  title:"北米の森の獣人「ビッグフット」",
+  excerpt:"巨大な足跡を残す毛むくじゃらの怪人。だが骨は一つも出ない。",
+  body:`北アメリカの森林地帯に潜むとされる、毛むくじゃらで巨大な二足歩行の生き物「ビッグフット（サスカッチ）」。身長は2メートルを超え、大きな足跡を残すことから、この名がついた。
+
+古くから先住民の伝承に語られ、近代以降も「森で見た」という目撃談や、巨大な足跡、不鮮明な写真・映像が数多く報告されてきた。
+
+だが、これほど多くの目撃があるにもかかわらず、骨や死体といった“動かぬ証拠”は、ただの一つも見つかっていない。有名な映像の一部は、着ぐるみによる作り物だったとも指摘されている。
+
+クマの見間違いや、いたずらとする見方が強い一方で、未知の類人猿の存在を信じる人も後を絶たない。北米を代表する未確認生物だ。`,
+  src:"https://ja.wikipedia.org/wiki/ビッグフット"},
+
+ {cat:"未確認生物",truth:"maybe",emoji:"⛄",caution:2,
+  title:"ヒマラヤの雪男「イエティ」",
+  excerpt:"雪上に残された巨大な足跡。その正体は意外なものかもしれない。",
+  body:`ヒマラヤの高地に棲むとされる、雪山の獣人「イエティ」。日本では「雪男」とも呼ばれる。全身が毛に覆われ、人のように二足で歩くと語られてきた。
+
+ヒマラヤを訪れた登山家たちが、雪の上に残された大きな足跡を報告したことで、世界的に知られるようになった。
+
+しかし、その足跡の多くは、クマやほかの動物のものが、雪の上で溶けて広がり、大きく見えていた可能性が指摘されている。実際、「イエティのもの」とされた毛や体の一部を調べたところ、クマなど既知の動物のものだった、という研究結果も出ている。
+
+決定的な証拠は見つかっていないが、神秘的な高峰に潜む獣人の伝説は、今も多くの人を惹きつけている。`,
+  src:"https://ja.wikipedia.org/wiki/イエティ"},
+
+ {cat:"未確認生物",truth:"maybe",emoji:"🐐",caution:3,
+  title:"家畜の血を吸う怪物「チュパカブラ」",
+  excerpt:"中南米で家畜が血を抜かれた状態で発見され、“犯人”が噂された。",
+  body:`1990年代、中南米を中心に「家畜が、血を抜かれたような状態で殺されている」という事件が相次いで報告された。その“犯人”とされたのが、未確認生物「チュパカブラ」だ。名前はスペイン語で「ヤギの血を吸うもの」を意味する。
+
+目撃証言では、トゲのある背中を持つ二足歩行の怪物として語られることもあれば、毛のない犬のような姿として語られることもあり、その姿は一定しない。
+
+後に“チュパカブラの死骸”として見つかったものの多くは、皮膚病で毛が抜け落ちたコヨーテや野犬だったと判明している。家畜の被害も、通常の捕食動物によるもので説明できる、とされる。
+
+比較的新しく生まれた未確認生物だが、その名は瞬く間に世界中へ広まった。`,
+  src:"https://ja.wikipedia.org/wiki/チュパカブラ"},
+
+ {cat:"未確認生物",truth:"maybe",emoji:"🦋",caution:3,
+  title:"惨事を予兆した怪人「モスマン」",
+  excerpt:"赤く光る目の羽の生えた人影。その後、町を惨事が襲った。",
+  body:`1960年代後半、アメリカ・ウェストバージニア州のある町で、「赤く光る目を持つ、巨大な羽の生えた人影を見た」という目撃が相次いだ。この怪物は「モスマン（蛾人間）」と呼ばれるようになった。
+
+目撃が続いたのち、その町で大きな橋が崩落し、多くの犠牲者を出す惨事が起きた。このことから、モスマンは「災いの前触れ（凶兆）」として語られるようになり、伝説に不気味な影を落とすことになる。
+
+正体については、大型のフクロウやツルなどの鳥の見間違いとする説が有力だ。橋の崩落も、構造的な欠陥が原因と調査で結論づけられている。
+
+それでも、惨事と結びついた“予言する怪物”の物語は、今もなお語り継がれている。`,
+  src:"https://ja.wikipedia.org/wiki/モスマン"},
+
+ {cat:"超常現象",truth:"maybe",emoji:"🌅",caution:2,
+  title:"死の淵で人は何を見るのか「臨死体験」",
+  excerpt:"トンネルの先の光、体外離脱——生還者が語る不思議な共通体験。",
+  body:`心臓が止まるなど、死の淵から生還した人々が、不思議な体験を語ることがある。「臨死体験」と呼ばれるものだ。
+
+その内容には、しばしば共通する要素が見られる。暗いトンネルの先に明るい光が見えた、自分の体を上から見下ろしていた（体外離脱）、亡くなった人に出会った、これまでの人生が一瞬でよみがえった——などだ。
+
+こうした体験を「死後の世界の証拠だ」と受け取る人もいる。一方で科学の側からは、脳が酸素不足や極限の状態に陥ったときに生じる現象として説明しようとする研究が進められている。
+
+死の間際に、人は何を見るのか。古くからの大きな問いに対し、証言は数多くあるものの、その正体は今も解き明かされていない。`,
+  src:"https://ja.wikipedia.org/wiki/臨死体験"},
+ {cat:"未確認生物",truth:"maybe",emoji:"🐍",caution:2,
+  title:"日本の幻のヘビ「ツチノコ」",
+  excerpt:"ビール瓶のように胴が太いヘビ。捕獲に懸賞金までかかった。",
+  body:`「ツチノコ」は、日本各地に伝わる未確認生物だ。ヘビに似ているが、胴の真ん中がビール瓶のように太く短い、という独特の姿で語られる。跳ねるように移動する、いびきをかく、などの目撃談も残っている。
+
+その存在は古くから言い伝えられ、昭和のころには一大ブームを巻き起こした。各地の自治体が「捕まえたら懸賞金」を掲げ、本気で捕獲を試みる人々まで現れた。
+
+しかし、これだけ探されてきたにもかかわらず、ツチノコの実物や死骸が学術的に確認されたことは一度もない。
+
+正体は、胴の太いマムシや、獲物を飲み込んで腹が膨らんだヘビの見間違いではないか、とする説が有力だ。それでも「もしかしたら本当にいるのでは」という夢は、今も多くの人を惹きつけている。`,
+  src:"https://ja.wikipedia.org/wiki/ツチノコ"},
+
+ {cat:"未確認生物",truth:"maybe",emoji:"🦑",caution:2,
+  title:"船を沈める巨大海獣「クラーケン」",
+  excerpt:"北欧の伝説の海の怪物。その正体は実在の生き物かもしれない。",
+  body:`「クラーケン」は、北欧の伝説に登場する巨大な海の怪物だ。島と見間違うほど巨大で、無数の触手で船を絡め取り、海の底へ引きずり込む——船乗りたちはそう語り伝えてきた。
+
+長い間、空想上の怪物と考えられてきたが、近代になって状況が変わる。深海には、全長十数メートルにもなる「ダイオウイカ」という実在の巨大なイカがいることが分かってきたのだ。
+
+かつて船乗りが目撃した巨大な触手の生き物は、このダイオウイカや、さらに大きなダイオウホウズキイカだったのではないか、と考えられている。
+
+つまりクラーケンは、まったくの空想ではなく、実在する深海の巨大生物が、伝説として大きく膨らんだものだった可能性が高い。海の怪物の影には、本物の謎が潜んでいた。`,
+  src:"https://ja.wikipedia.org/wiki/クラーケン"},
+
+ {cat:"未確認生物",truth:"solved",emoji:"📹",caution:1,
+  title:"映像にだけ写る謎の物体「スカイフィッシュ」",
+  excerpt:"高速で飛ぶ棒状の生物？ ビデオに写る正体は意外なものだった。",
+  body:`1990年代、ビデオ映像の中に、棒のように細長く、高速で飛ぶ謎の物体が写り込んでいることが話題になった。「スカイフィッシュ（ロッド）」と呼ばれ、肉眼では捉えられない未知の生物ではないか、と騒がれた。
+
+映像では、細長い胴の両脇に、ひれのようなものが波打って見える。あまりに速く動くため、未確認生物として一躍注目を集めた。
+
+しかし、その正体はやがて明らかになる。実験によって、これはカメラの前を横切った昆虫が、シャッターの仕組みのために細長くブレて写ったものだ、と示されたのだ。羽ばたきの軌跡が、ひれのように見えていた。
+
+新種の生物ではなく、撮影上の“目の錯覚”だった。映像の謎は、こうして説明がついた。`,
+  src:"https://ja.wikipedia.org/wiki/スカイフィッシュ"},
+
+ {cat:"未確認生物",truth:"maybe",emoji:"🦖",caution:2,
+  title:"ジャングルに棲む“生きた恐竜”？「モケーレ・ムベンベ」",
+  excerpt:"アフリカの奥地に、首長竜のような巨大生物がいるという伝承。",
+  body:`「モケーレ・ムベンベ」は、アフリカ中部・コンゴ川流域の奥地に棲むとされる未確認生物だ。長い首と尾を持ち、まるで生き残った恐竜（竜脚類）のような姿で語られる。
+
+現地の人々の間には古くからこの生き物の言い伝えがあり、それを聞きつけた探検隊や研究者が、何度も奥地へ調査に入ってきた。
+
+しかし、広大で人を寄せつけないジャングルの調査は困難を極め、これまでに生きた姿や、はっきりした痕跡が確認されたことはない。
+
+巨大な恐竜が今も生きているとは考えにくく、カバなどの既知の動物の伝承が変化したものではないか、とする見方もある。それでも、未踏のジャングルに眠る“生きた恐竜”の夢は、探検家たちを惹きつけ続けている。`,
+  src:"https://ja.wikipedia.org/wiki/モケーレ・ムベンベ"},
+
+ {cat:"未確認生物",truth:"maybe",emoji:"🐉",caution:2,
+  title:"大海原の巨大な蛇「シーサーペント」",
+  excerpt:"船乗りたちが繰り返し目撃した、海をうねる巨大な生き物。",
+  body:`「シーサーペント（大海蛇）」は、世界中の海で古くから目撃されてきたとされる、巨大な蛇のような海の生き物だ。海面をうねりながら進む長大な体が、何度も船乗りたちによって報告されてきた。
+
+その目撃は伝説の中だけでなく、近代の船員や、ときには複数の人による証言としても残っている。あまりに多くの報告があるため、「何か未知の大型生物がいるのでは」と長く議論されてきた。
+
+正体については、いくつもの候補が挙げられている。細長く銀色に輝く深海魚「リュウグウノツカイ」や、泳ぐ大型のウミヘビ、波やクジラの見間違いなどだ。
+
+確実な証拠は見つかっていないが、広い海にはまだ知られざる生き物がいるかもしれない——そんな想像をかき立てる、海の代表的な未確認生物だ。`,
+  src:"https://ja.wikipedia.org/wiki/シーサーペント"},
+
+ {cat:"歴史のミステリー",truth:"fact",emoji:"🪖",caution:1,
+  title:"地下に眠る8000体の軍団「兵馬俑」",
+  excerpt:"始皇帝の墓を守る等身大の陶製の兵士たち。顔は一体ずつ違う。",
+  body:`1974年、中国で井戸を掘っていた農民が、地中から陶器のかけらを掘り当てた。それが、世紀の大発見「兵馬俑」の始まりだった。
+
+地下からは、等身大の陶製の兵士や馬が、整然と隊列を組んで次々と現れた。その数は、推定で8000体にものぼるとされる。驚くべきことに、兵士たちの顔つきや表情は一体ずつ異なり、まるで本物の軍団のようだ。
+
+これらは、中国を初めて統一した始皇帝の巨大な墓を守るために造られたものと考えられている。
+
+しかし、肝心の始皇帝本人が眠るとされる墓の中心部は、いまだ発掘されていない。古い記録には、水銀の川が流れているといった記述もあり、その内部に何が眠っているのかは、今も大きな謎のままだ。`,
+  src:"https://ja.wikipedia.org/wiki/兵馬俑"},
+
+ {cat:"歴史のミステリー",truth:"maybe",emoji:"👑",caution:1,
+  title:"どこにあったのか「邪馬台国」",
+  excerpt:"女王・卑弥呼が治めた古代日本の国。その場所が今も分からない。",
+  body:`「邪馬台国」は、3世紀ごろの日本に存在したとされる国だ。女王・卑弥呼が治めていたことで知られ、当時の中国の歴史書（魏志倭人伝）に、その様子が記されている。
+
+問題は、その歴史書に書かれた道のりをたどっても、邪馬台国が「どこにあったのか」が、はっきりしないことだ。
+
+大きく分けて、九州にあったとする「九州説」と、近畿地方にあったとする「畿内説」があり、ほかにもさまざまな説が唱えられている。記述の解釈や、各地の遺跡の発掘成果をめぐって、研究者の間で長年にわたる論争が続いている。
+
+日本という国の成り立ちにかかわる重要な国でありながら、その所在地すら定まっていない。日本古代史における、最大級のミステリーのひとつだ。`,
+  src:"https://ja.wikipedia.org/wiki/邪馬台国"},
+
+ {cat:"未解決事件",truth:"maybe",emoji:"🎯",caution:4,
+  title:"世界を揺るがした暗殺「ケネディ大統領暗殺事件」",
+  excerpt:"白昼の銃撃で大統領が死亡。真相をめぐる議論は今も続く。",
+  body:`1963年、アメリカのケネディ大統領が、テキサス州ダラスをパレード中に銃撃され、命を落とした。世界に衝撃を与えたこの事件は、現代史に深い影を落とした。
+
+容疑者として一人の男が逮捕されたが、その男もまた、移送中に別の人物に射殺されてしまう。本人の口から真相が語られることは、ついになかった。
+
+その後の公式調査では、「容疑者の単独犯行」と結論づけられた。しかし、銃撃の状況や弾道などをめぐって疑問の声が相次ぎ、「背後に大きな陰謀があったのではないか」とする説が次々と唱えられた。
+
+膨大な資料が公開された今もなお、人々の議論は尽きない。20世紀でもっとも語られ続けている事件のひとつだ。`,
+  src:"https://ja.wikipedia.org/wiki/ケネディ大統領暗殺事件"},
+
+ {cat:"未解決事件",truth:"maybe",emoji:"🏦",caution:4,
+  title:"毒殺による銀行強盗「帝銀事件」",
+  excerpt:"“消毒薬”と偽って毒を飲ませ、12人を殺害した前代未聞の事件。",
+  body:`1948年、東京の帝国銀行の支店に、都の防疫員を名乗る男が現れた。「近くで集団感染が出たので、予防薬を飲んでほしい」と告げ、行員たちに液体を飲ませた。
+
+それは薬ではなく毒物だった。行員ら12人が死亡し、男は現金などを奪って姿を消した。一度に大勢を毒殺して金を奪うという、前代未聞の手口だった。
+
+その後、一人の画家が容疑者として逮捕され、死刑判決を受けた。しかし、本人は一貫して無実を訴え、自白の信ぴょう性や物的証拠の乏しさから、「冤罪ではないか」という指摘が今も根強く残っている。
+
+その画家は再審を求め続けたまま、刑が執行されないうちに獄中で亡くなった。本当の犯人は誰だったのか——多くの謎を残した事件だ。`,
+  src:"https://ja.wikipedia.org/wiki/帝銀事件"},
+
+ {cat:"失踪・消失",truth:"maybe",emoji:"❄️",caution:3,
+  title:"北極で消えた129人「フランクリン遠征隊」",
+  excerpt:"最新装備の探検隊が、2隻の船もろとも忽然と消えた。",
+  body:`1845年、イギリスは北極海の「北西航路」を切り開くため、ジョン・フランクリン率いる探検隊を送り出した。エレバス号とテラー号という2隻の船に、129人の隊員が乗り込んでいた。当時としては最高水準の装備を整えた、自信に満ちた遠征だった。
+
+ところが、この遠征隊はイングランドの港を出たのを最後に、二度と戻ってこなかった。船も人も、北極の氷の中へ忽然と消えてしまったのだ。
+
+その後の捜索や、現地の先住民イヌイットの証言から、船は氷に閉じ込められ、隊員たちは船を捨てて徒歩で脱出を試みたものの、全員が命を落としたとみられている。
+
+長く謎に包まれていたが、近年になって2隻の沈没船が相次いで発見された。それでも、なぜ全滅に至ったのか、その詳しい経緯には、まだ分からない部分が残されている。`,
+  src:"https://ja.wikipedia.org/wiki/フランクリン遠征"},
+
+ {cat:"失踪・消失",truth:"fact",emoji:"🗻",caution:3,
+  title:"雪山で消えた部隊「八甲田雪中行軍遭難事件」",
+  excerpt:"訓練に出た約210人のうち、生還できたのはわずかだった。",
+  body:`1902年（明治35年）、青森の陸軍部隊が、冬の八甲田山での雪中行軍訓練に出発した。寒冷地での戦いに備えるための演習だった。
+
+ところが、隊が山に入ると天候が急変し、猛烈な吹雪に見舞われる。視界を奪われた部隊は道を見失い、極寒の雪山をさまよううちに、次々と倒れていった。
+
+約210人が参加したこの行軍で、生きて帰ることができたのはごくわずか。世界の山岳遭難の歴史でも、まれに見る大惨事となった。
+
+これは超常現象ではなく、自然の猛威と、判断の難しさが重なって起きた、実際の悲劇だ。後に小説や映画にもなり、自然の恐ろしさと、装備や計画の大切さを今に伝えている。`,
+  src:"https://ja.wikipedia.org/wiki/八甲田雪中行軍遭難事件"},
+
+ {cat:"自然の怪現象",truth:"fact",emoji:"🌫️",caution:1,
+  title:"砂漠の街や幽霊船を生む「蜃気楼」",
+  excerpt:"見えるはずのない街や船が、空や海に浮かび上がる現象。",
+  body:`遠くにあるはずのない街並みが空に浮かんだり、海の上を船が宙づりで進んでいるように見えたり——古くから世界各地で、人々はこうした不思議な光景を目撃してきた。「蜃気楼」と呼ばれる現象だ。
+
+その正体は、空気の温度差による光の屈折だ。冷たい空気と暖かい空気が層になっていると、光が曲がって進み、遠くの景色が伸びたり、逆さまになったり、宙に浮いて見えたりする。
+
+かつては怪奇現象や吉凶の前触れと考えられたが、今では科学的に説明できる自然現象だ。
+
+興味深いのは、海上の蜃気楼が、伝説の「幽霊船」や、一部の未確認飛行物体（UFO）の目撃の正体だった可能性もある、という点だ。自然のいたずらが、数々の謎を生んできたのだ。`,
+  src:"https://ja.wikipedia.org/wiki/蜃気楼"},
+
+ {cat:"自然の怪現象",truth:"fact",emoji:"🧱",caution:1,
+  title:"巨人が造った？六角形の石段「ジャイアンツ・コーズウェー」",
+  excerpt:"きれいな六角形の石柱が数万本。伝説では巨人の仕業とされた。",
+  body:`イギリス・北アイルランドの海岸に、不思議な光景が広がっている。きれいな六角形をした石の柱が、まるで巨大な階段のように、びっしりと数万本も並んでいるのだ。「ジャイアンツ・コーズウェー（巨人の石道）」と呼ばれている。
+
+あまりに整然としているため、人工物のようにも見える。地元の伝説では、巨人がこの石道を造ったのだと語り継がれてきた。
+
+しかし、その正体は自然が生み出したものだ。大昔の火山活動で噴き出した溶岩が、ゆっくり冷えて固まるときに収縮し、規則正しい六角形の柱状に割れた——これが「柱状節理」と呼ばれる現象である。
+
+巨人の仕業ではなく、地球の営みが造り上げた芸術。実在する世界遺産であり、自然の不思議を今に伝えている。`,
+  src:"https://ja.wikipedia.org/wiki/ジャイアンツ・コーズウェー"},
+
+ {cat:"オーパーツ・遺物",truth:"maybe",emoji:"⛏️",caution:1,
+  title:"カミソリも通さぬ石組み「サクサイワマン」",
+  excerpt:"巨大な石が隙間なくぴたりと組まれた、インカの謎の石壁。",
+  body:`南米ペルーの古都クスコを見下ろす丘に、インカ帝国が築いた巨大な石組みの遺跡「サクサイワマン」がある。
+
+最大の見どころは、その石壁だ。数十トン、ときには100トンを超えるともいわれる巨大な石が、複雑な形に削られ、隙間なくぴたりと組み合わされている。石と石の間には、カミソリの刃1枚すら差し込めないほどだという。
+
+セメントのような接着剤は使われていない。にもかかわらず、地震の多い土地で、何百年ものあいだ崩れずに建っている。
+
+重機もない時代に、どうやってこれほど巨大な石を運び、寸分の狂いもなく削って組み上げたのか。インカの人々の高い技術力を物語る遺跡だが、その詳しい方法には、なお謎が残されている。`,
+  src:"https://ja.wikipedia.org/wiki/サクサイワマン"},
+
+ {cat:"オーパーツ・遺物",truth:"maybe",emoji:"🪧",caution:1,
+  title:"誰も読めない島の文字「ロンゴロンゴ」",
+  excerpt:"イースター島に残る謎の文字。解読できる者は一人もいない。",
+  body:`モアイで知られるイースター島には、もうひとつの謎がある。木の板などに刻まれた、不思議な文字「ロンゴロンゴ」だ。
+
+人や鳥、魚、幾何学模様のような記号が、規則正しく並んでいる。文字のように見えるが、これが本当に言葉を記したものなのか、それとも別の意味を持つ記号なのかさえ、はっきりしていない。
+
+問題なのは、この文字を読める人が、もう誰もいないことだ。島にヨーロッパ人が訪れた後の混乱で、文字を理解していた人々が失われ、解読の手がかりも途絶えてしまった。
+
+現存する板はごくわずか。世界中の研究者が解読に挑んできたが、いまだ成功していない。あのヴォイニッチ手稿と並ぶ、“読めない文字”の謎として知られている。`,
+  src:"https://ja.wikipedia.org/wiki/ロンゴロンゴ"},
+
+ {cat:"UFO・宇宙人",truth:"maybe",emoji:"🥏",caution:2,
+  title:"「空飛ぶ円盤」の語源「ケネス・アーノルド事件」",
+  excerpt:"1947年、パイロットが見た9つの物体が、UFOブームの起点に。",
+  body:`1947年6月、アメリカ・ワシントン州の上空を、実業家でパイロットのケネス・アーノルドが自家用機で飛んでいた。行方不明になった輸送機を捜索していたところ、彼はレーニア山の付近を高速で飛ぶ、9つの奇妙な物体を目撃したという。
+
+物体には尾翼のようなものがなく、平たい形をしていた。アーノルドは、その飛び方を「水面を皿（ソーサー）が跳ねていくようだった」と表現した。
+
+これを報じた新聞が「フライング・ソーサー（空飛ぶ円盤）」という言葉を使ったことで、表現が世界中に広まった。皿のように飛ぶ、という意味だったはずが、いつしか「皿（円盤）の形をした飛行物体」というイメージとして定着していく。
+
+第二次大戦後に大きく報じられた最初のUFO事件であり、現代のUFOブームの“出発点”とされる出来事だ。`,
+  src:"https://ja.wikipedia.org/wiki/ケネス・アーノルド事件"},
+
+ {cat:"UFO・宇宙人",truth:"maybe",emoji:"🌲",caution:3,
+  title:"英国版ロズウェル「レンデルシャムの森事件」",
+  excerpt:"米軍基地のそばの森に降りた光体。兵士たちが目撃した。",
+  body:`1980年12月、イギリス東部・サフォーク州のレンデルシャムの森で、UFO遭遇事件が起きた。近くにはアメリカ軍が使う空軍基地があった。
+
+深夜、森に正体不明の光体が降下していくのを、基地の警備兵が目撃する。確認に向かった兵士たちは、光を放つ金属製の三角形の飛行物体を見た、と証言した。物体に近づくと姿を消したという。
+
+翌日、その場所には3つの窪みが残されており、付近からはわずかな放射線も測定されたと報告された。
+
+複数の軍人が目撃し、副司令官が報告書（後に公開）を残したことから、「英国版ロズウェル」と呼ばれ、信頼性が高いとする見方もある。一方で、近くの灯台の光を見間違えたのではないか、という指摘もあり、真相は今も霧の中だ。`,
+  src:"https://ja.wikipedia.org/wiki/レンデルシャムの森事件"},
+
+ {cat:"予言・超能力",truth:"maybe",emoji:"😴",caution:2,
+  title:"眠りながら“診断”した予言者「エドガー・ケイシー」",
+  excerpt:"催眠状態で病を言い当てたとされる、アメリカの“眠れる予言者”。",
+  body:`エドガー・ケイシーは、20世紀前半のアメリカで活動した人物で、「眠れる預言者」とも呼ばれた。
+
+彼は、催眠のような眠った状態に入ると、会ったこともない遠くの人の病気を言い当て、その治療法を語った、とされている。こうした「リーディング」は膨大な数が記録に残されており、信奉者たちは、その多くが当たっていたと主張する。
+
+病気の診断だけでなく、未来の出来事や、古代文明についての“予言”も数多く残したと言われ、後の精神世界（スピリチュアル）の流行に大きな影響を与えた。
+
+一方で懐疑的な立場からは、記録の解釈が曖昧であることや、当たったとされる例の検証の難しさが指摘されている。本物の能力だったのか、今も評価は分かれている。`,
+  src:"https://ja.wikipedia.org/wiki/エドガー・ケイシー"},
+
+ {cat:"超常現象",truth:"maybe",emoji:"🧠",caution:2,
+  title:"大勢が同じ“勘違い”をする「マンデラ効果」",
+  excerpt:"実際とは違う出来事を、多くの人が同じように記憶している現象。",
+  body:`実際には起きていない出来事や、事実とは違う細部を、なぜか大勢の人が「そうだったはずだ」と同じように記憶している——こうした現象は「マンデラ効果」と呼ばれている。
+
+名前の由来は、南アフリカの指導者ネルソン・マンデラだ。彼は実際には2013年に亡くなったが、「ずっと前に獄中で死んだはず」と記憶していた人が世界中に大勢いた、という出来事から、この名がついた。
+
+ほかにも、有名なロゴやキャラクターの細部、映画の有名なセリフなどで、「みんなの記憶」と「実際」がずれている例が数多く報告されている。
+
+「並行世界が交わった証拠だ」と語る人もいるが、多くの専門家は、人間の記憶が思い込みや暗示で書き換わりやすいことの表れ（集団的な記憶違い）だと説明している。`,
+  src:"https://ja.wikipedia.org/wiki/マンデラ効果"},
+
+ {cat:"超常現象",truth:"maybe",emoji:"♻️",caution:2,
+  title:"初めてなのに“前にもあった”感覚「デジャヴ（既視感）」",
+  excerpt:"初めての場所や体験を、なぜか「前に経験した」と感じる現象。",
+  body:`初めて訪れた場所なのに、なぜか「前にもここに来たことがある」と感じる。初めての会話なのに、「この光景を以前にも見た」という強い感覚に襲われる——多くの人が一度は経験する、この不思議な感覚が「デジャヴ（既視感）」だ。
+
+あまりに鮮明なため、「前世の記憶では」「未来を予知したのでは」と語られることもある。
+
+しかし科学の側からは、脳の働きによる現象として説明が試みられている。たとえば、目にした情報が記憶として処理される過程で、ほんのわずかな“ずれ”が生じ、今の体験が「過去の記憶」として誤って感じられる、といった説だ。
+
+ありふれた感覚でありながら、その仕組みはまだ完全には解明されていない。脳が見せる、身近な“謎”のひとつだ。`,
+  src:"https://ja.wikipedia.org/wiki/既視感"},
+ {cat:"UFO・宇宙人",truth:"solved",emoji:"🪐",caution:1,
+  title:"火星人が造った？「火星の人面岩」",
+  excerpt:"火星の地表に人間の顔。だが、撮り直すとただの丘だった。",
+  body:`1976年、火星を探査していたNASAの探査機バイキングが、地表のある地形を撮影した。すると、まるで人間の顔が空をにらんでいるように見える地形が写っていた。「火星の人面岩」として、世界中で話題になる。
+
+目・鼻・口のように見えるくぼみが左右対称に並んでいたことから、「火星人が造った人工物では」「古代文明の遺跡では」といった説まで飛び出した。
+
+しかしその後、性能の上がった探査機が、同じ場所をさまざまな角度や光の条件で撮影し直すと、それはただの丘（メサ）であることが分かった。最初の写真で顔に見えたのは、光と影のいたずらと、低い解像度のせいだった。
+
+人間が、無意味な模様の中に顔を見出してしまう脳のクセ（シミュラクラ現象）が生んだ、有名な“勘違い”の一例である。`,
+  src:"https://ja.wikipedia.org/wiki/火星の人面岩"},
+
+ {cat:"UFO・宇宙人",truth:"maybe",emoji:"👽",caution:2,
+  title:"最も有名な宇宙人“誘拐”「ヒル夫妻誘拐事件」",
+  excerpt:"消えた2時間の記憶。催眠の末に語られたUFO内での体験。",
+  body:`1961年、アメリカ・ニューハンプシャー州。夜の道を車で帰っていたヒル夫妻は、空に奇妙な光を見つけた。光は追ってくるように近づき、やがて夫妻は意識が途切れる。気づくと、2時間ほどの記憶がすっぽり抜け落ち、家のずっと手前にいたという。
+
+その後、夫妻は悪夢や原因不明の不調に悩まされる。催眠療法を受けると、二人は「UFOに連れ込まれ、宇宙人に体を調べられた」という“記憶”を語り始めた。
+
+これは世界で最も有名な「宇宙人による誘拐（アブダクション）」の事例とされ、後のUFO文化に大きな影響を与えた。
+
+一方で懐疑的な見方も強い。催眠で引き出された記憶の信頼性には疑問があり、証言の数日前にテレビで似た宇宙人が放送されていたことなども指摘されている。真相は、今も藪の中だ。`,
+  src:"https://ja.wikipedia.org/wiki/ヒル夫妻誘拐事件"},
+
+ {cat:"未確認生物",truth:"maybe",emoji:"🥒",caution:1,
+  title:"日本の水辺の妖怪「河童」",
+  excerpt:"頭の皿に甲羅、キュウリ好き。全国に伝わる“未確認”の住人。",
+  body:`「河童（かっぱ）」は、日本各地に古くから伝わる、水辺に棲むとされる妖怪だ。頭の上に水をたたえた皿があり、背中に甲羅、手には水かき。キュウリを好み、人や馬を水に引き込み、相撲が好き——そんな姿で語り継がれてきた。
+
+全国に河童の伝承や、河童を祀った神社、目撃談、さらには「河童のミイラ」とされるものまで残っている。
+
+正体については、さまざまな説がある。川で命を落とした人々への戒めから生まれた存在、水死体の様子、あるいはカワウソやスッポンなどの見間違いが伝説に変わったもの、などだ。
+
+実在の生き物としては確認されていないが、これほど全国にゆきわたった妖怪も珍しい。日本人が水に抱いてきた畏れが生んだ、身近な“未確認生物”といえる。`,
+  src:"https://ja.wikipedia.org/wiki/河童"},
+
+ {cat:"未確認生物",truth:"maybe",emoji:"🦈",caution:2,
+  title:"今も生きている？巨大ザメ「メガロドン」",
+  excerpt:"実在した史上最大級のサメ。深海生存説の真偽は。",
+  body:`かつての海に、体長が十数メートルにも達したとされる、史上最大級のサメがいた。「メガロドン」だ。その存在は、各地で見つかる巨大な歯の化石によって、はっきりと裏づけられている。今のホホジロザメをはるかにしのぐ、海の頂点捕食者だった。
+
+このメガロドンは、およそ数百万年前に絶滅したと考えられている。
+
+ところが、「深海のどこかに、今も生き残っているのでは」という説が、たびたび語られてきた。広大で未知の多い深海なら、隠れていてもおかしくない、というわけだ。
+
+しかし、それを裏づける証拠は何もない。新しい歯の化石も、確かな目撃の記録も見つかっていないことから、メガロドンはやはり絶滅した、というのが科学の結論だ。実在した“怪物ザメ”をめぐる、ロマンあふれる伝説である。`,
+  src:"https://ja.wikipedia.org/wiki/メガロドン"},
+
+ {cat:"未確認生物",truth:"maybe",emoji:"🧜",caution:1,
+  title:"海の半人半魚「人魚」",
+  excerpt:"世界中に伝わる人魚伝説。その目撃の正体とは。",
+  body:`上半身は人、下半身は魚——「人魚」の伝説は、世界中の海辺の地域に古くから伝わっている。船乗りたちが「人魚を見た」と語った記録も、数多く残されている。
+
+日本にも、人魚の肉を食べて不老長寿になったという「八百比丘尼」の伝説などがある。
+
+では、その目撃の正体は何だったのか。有力なのは、ジュゴンやマナティといった海の哺乳類の見間違いだ。これらは水面から上半身を起こして子を抱くような姿を見せることがあり、遠目には人のように見えたのかもしれない。
+
+また、サルの上半身と魚の下半身をつなぎ合わせて作った「人魚のミイラ」が見世物にされたこともあったが、これらは作り物だった。実在は確認されていないが、人魚は今も物語の中で愛され続けている。`,
+  src:"https://ja.wikipedia.org/wiki/人魚"},
+
+ {cat:"未解決事件",truth:"maybe",emoji:"🪓",caution:5,
+  title:"無罪となった娘「リジー・ボーデン事件」",
+  excerpt:"両親が惨殺され、娘が疑われた。だが真犯人は不明のまま。",
+  body:`1892年、アメリカ・マサチューセッツ州で、ある夫婦が自宅で斧のような凶器によって惨殺された。容疑者として逮捕されたのは、被害者の娘リジー・ボーデンだった。
+
+裁判は世間の大きな注目を集めた。状況はリジーに不利に見えたものの、決定的な証拠は乏しく、陪審は最終的に「無罪」の評決を下す。
+
+しかし、ではいったい誰が犯人だったのかは、ついに分からずじまいだった。リジーが本当に無実だったのか、それとも証拠不十分で罪を逃れたのか——人々の意見は今も分かれている。
+
+事件は数え歌にまでなり、アメリカで長く語り継がれる未解決事件となった。（※凄惨な事件のため閲覧注意）`,
+  src:"https://ja.wikipedia.org/wiki/リジー・ボーデン"},
+
+ {cat:"未解決事件",truth:"maybe",emoji:"🚃",caution:4,
+  title:"自殺か他殺か「下山事件」",
+  excerpt:"国鉄総裁が失踪し、翌日 線路上で遺体に。戦後最大級の謎。",
+  body:`1949年（昭和24年）、当時の国鉄（現在のJR）の初代総裁・下山定則が、出勤の途中で突然行方不明になった。そして翌日、線路上で轢死体となって発見された。
+
+折しも、国鉄では大規模な人員整理が進められ、社会が緊張していた時期だった。総裁の不可解な死は、日本中を震撼させた。
+
+問題は、これが「自殺」なのか「他殺」なのかが、はっきりしないことだ。遺体の状況や、現場に血が少なかったことなどをめぐって、捜査陣や専門家の見解も真っ二つに割れた。さまざまな陰謀説も飛び交った。
+
+結局、真相は解明されないまま、事件は時効を迎えた。戦後日本の闇を象徴する、最大級の未解決事件のひとつとして知られている。`,
+  src:"https://ja.wikipedia.org/wiki/下山事件"},
+
+ {cat:"失踪・消失",truth:"maybe",emoji:"⚓",caution:2,
+  title:"さまよえる幽霊船「フライング・ダッチマン」",
+  excerpt:"永遠に港へ帰れない呪われた船。目撃の正体は意外なもの。",
+  body:`「フライング・ダッチマン（さまよえるオランダ船）」は、ヨーロッパに古くから伝わる幽霊船の伝説だ。嵐の中で神を呪った船長が、その罰として、永遠に港へたどり着けず海をさまよい続ける——そんな物語で語られる。
+
+この幽霊船を目撃すると不吉なことが起こる、とされ、多くの船乗りに恐れられてきた。実際に「光る船を見た」という目撃談も、各地で報告されている。
+
+では、その正体は何か。有力なのは「蜃気楼」だ。遠くにある本物の船が、大気の屈折によって宙に浮いて見えたり、ぼんやり光って見えたりしたのではないか、というのだ。
+
+海の不安と迷信が生んだ伝説だが、その“目撃”の背景には、自然現象が隠れていたのかもしれない。`,
+  src:"https://ja.wikipedia.org/wiki/フライング・ダッチマン"},
+
+ {cat:"失踪・消失",truth:"maybe",emoji:"🗝️",caution:2,
+  title:"牢獄で消えた王子「ルイ17世」",
+  excerpt:"革命下で病死とされた幼い王子。生存説の真相は。",
+  body:`フランス革命のさなか、処刑された国王ルイ16世とマリー・アントワネットの息子、幼い王子ルイ17世。彼は革命政府によって牢獄に閉じ込められ、わずか10歳で病死したとされた。
+
+ところが、その死には不審な点が多く、「実は王子は脱出させられ、別の子どもが身代わりにされたのでは」という噂が広まった。
+
+その後、ヨーロッパ各地に「自分こそ生き延びたルイ17世だ」と名乗る人物が、何人も現れた。本物の王子の運命をめぐる謎は、長く人々の興味を引き続けた。
+
+決着がついたのは、ずっと後のことだ。牢獄で死んだ子どもの心臓が保存されており、2000年にそのDNAを分析した結果、王妃マリー・アントワネットの血筋と一致。やはり王子は牢獄で亡くなっていた、と結論づけられた。`,
+  src:"https://ja.wikipedia.org/wiki/ルイ17世"},
+
+ {cat:"オーパーツ・遺物",truth:"maybe",emoji:"⚪",caution:1,
+  title:"ジャングルの真ん丸な石「コスタリカの石球」",
+  excerpt:"驚くほど正確な球体。誰が、何のために削ったのか。",
+  body:`中米コスタリカのジャングルなどで、不思議な石の球が数多く発見されている。「コスタリカの石球」だ。小さなものから直径2メートルを超える巨大なものまであり、その多くが、驚くほど正確な“真ん丸”に加工されている。
+
+これらは、コロンブスの到達よりも前の時代に、先住民の文化によって作られたと考えられている。
+
+謎なのは、その目的と作り方だ。金属の道具も乏しい時代に、どうやってこれほど精密な球を削り出したのか。そして、何のために作り、並べたのか。天体を表したもの、権力の象徴など、さまざまな説があるが、決定的な答えは出ていない。
+
+しかも、多くが元の場所から動かされてしまったため、配置の意味を探る手がかりも失われた。実在する、静かな石の謎だ。`,
+  src:"https://ja.wikipedia.org/wiki/コスタリカの石球"},
+
+ {cat:"オーパーツ・遺物",truth:"maybe",emoji:"🔋",caution:1,
+  title:"2000年前の電池？「バグダッド電池」",
+  excerpt:"古代の壺に銅と鉄。電気は大昔から使われていたのか。",
+  body:`現在のイラク、バグダッド近郊で発見された、古代の小さな土器の壺。この中に銅の筒と鉄の棒が仕込まれていたことから、「これは古代の電池ではないか」と話題になった。「バグダッド電池」と呼ばれるオーパーツだ。
+
+電池が発明されたのは18世紀末。もしこれが本当に電池なら、それより1000年以上も前に電気が使われていたことになる——そう考えられ、金メッキに使ったのでは、といった説まで生まれた。
+
+実際に壺を再現して果汁を入れると、わずかな電気が流れることも確かめられた。
+
+ただし、出土時のようにアスファルトで密封された状態では、電池として実用にはならない。今では「電池ではなく、巻物などをしまう容器だったのでは」とする見方が有力だ。古代へのロマンを誘う、評価の分かれる遺物である。`,
+  src:"https://ja.wikipedia.org/wiki/バグダッド電池"},
+
+ {cat:"自然の怪現象",truth:"maybe",emoji:"🧯",caution:3,
+  title:"人だけが燃え尽きる「人体自然発火現象」",
+  excerpt:"周りに火の気はない。なのに体だけが炭に。その仕組みは。",
+  body:`周りに火の気がないのに、人の体だけが燃え尽きてしまう——「人体自然発火現象」と呼ばれる、不可解な事例がたびたび報告されてきた。
+
+特徴的なのは、その燃え方だ。遺体はほとんど炭になるほど焼けているのに、すぐそばの家具やカーテンは、ほとんど焼けていないことが多い。まるで体だけが内側から燃えたように見えることから、「人は突然、自然に発火するのか」と謎を呼んだ。
+
+有力な説は「芯（しん）効果」だ。たばこの火など、ごく小さな火種が衣服に燃え移ると、体の脂肪がロウソクのロウのように溶け出し、衣服を“芯”にして、長い時間をかけてゆっくりと燃え続ける——というものだ。
+
+本当に“自然に”発火したわけではなく、外部の小さな火種と体の脂肪が原因、というのが現在の有力な見方である。`,
+  src:"https://ja.wikipedia.org/wiki/人体自然発火現象"},
+
+ {cat:"自然の怪現象",truth:"fact",emoji:"🌩️",caution:2,
+  title:"毎晩 雷が鳴り続ける場所「カタトゥンボの雷」",
+  excerpt:"年200日、絶え間ない稲妻。世界一の“雷の名所”の正体。",
+  body:`ベネズエラのマラカイボ湖。そこに注ぐカタトゥンボ川の河口付近では、夜になると、ほとんど毎晩のように雷が鳴り続ける。「カタトゥンボの雷」と呼ばれる現象だ。
+
+その頻度は世界一とされ、1年のうち200日近く、1晩に何時間も、絶え間なく稲妻が空を走る。あまりに規則的なため、古くから船乗りたちは「マラカイボの灯台」と呼び、航海の目印にしてきたほどだ。
+
+なぜ、ここだけでこれほど雷が集中するのか。鍵は地形にある。湖の周りをアンデス山脈が囲み、カリブ海から流れ込む暖かく湿った空気が、山から下りてくる冷たい空気とぶつかる。これが、毎晩のように巨大な雷雲を生み出すのだ。
+
+超常現象ではなく、地形が生んだ“天然の雷発生装置”。実在する、世界屈指の自然のショーだ。`,
+  src:"https://ja.wikipedia.org/wiki/カタトゥンボの雷"},
+
+ {cat:"予言・超能力",truth:"maybe",emoji:"☀️",caution:2,
+  title:"数万人が見た“太陽の奇跡”「ファティマの聖母」",
+  excerpt:"3人の子どもの前に現れた聖母。群衆は太陽が踊るのを見た。",
+  body:`1917年、ポルトガルの村ファティマで、3人の子どもが「聖母マリアが現れた」と語り始めた。聖母は毎月決まった日に現れ、いくつかの“予言”を告げた、とされる。
+
+評判が広まり、最後の日には数万人もの群衆が集まった。すると、雨上がりの空で太陽が回転し、色を変えながら地上に近づくように見えた、と多くの人が証言した。これが「太陽の奇跡」と呼ばれている。
+
+信仰の立場では、これは聖母の存在を示す奇跡とされる。一方で科学的には、長時間にわたって太陽を見つめたことによる目の錯覚や、期待の高まった群衆心理によるもの、という説明が試みられている。
+
+大勢が同じ光景を“見た”とされる出来事でありながら、その解釈は、今も大きく分かれている。`,
+  src:"https://ja.wikipedia.org/wiki/ファティマの聖母"},
+
+ {cat:"超常現象",truth:"maybe",emoji:"📷",caution:3,
+  title:"写り込んだ顔や人影「心霊写真」",
+  excerpt:"いるはずのない誰かが写る。その多くには理由がある。",
+  body:`撮ったはずのない人影や顔、白いもやが写り込んでいる——いわゆる「心霊写真」は、古くから人々を怖がらせてきた。
+
+写真が広く撮られるようになった時代から、こうした“幽霊が写った写真”は数多く現れ、テレビや雑誌でも盛んに取り上げられた。
+
+しかし、その多くは原因を科学的に説明できる。フィルム時代の二重露光（撮影の重なり）、指やストラップの写り込み、レンズの反射（フレア）、そして、模様や影を顔だと感じてしまう脳のクセ（シミュラクラ現象）などだ。意図的に作られた偽物も少なくない。
+
+もちろん、すべてに説明がつくと断言はできない。しかし「心霊写真」とされるものの大部分は、こうした現実的な原因から生まれている、というのが冷静な見方だ。`,
+  src:"https://ja.wikipedia.org/wiki/心霊写真"},
+
+ {cat:"超常現象",truth:"maybe",emoji:"💫",caution:2,
+  title:"自分の体を見下ろす感覚「体外離脱」",
+  excerpt:"意識が体を抜け出す体験。脳が見せる錯覚なのか。",
+  body:`自分の意識が体から抜け出し、宙に浮かんで、眠っている自分自身を上から見下ろしている——そんな感覚を体験する人がいる。「体外離脱（幽体離脱）」と呼ばれる現象だ。
+
+臨死体験の中で語られることも多く、「魂が肉体を離れた証拠だ」「死後の世界とつながっている」と受け取る人もいる。
+
+一方で、研究も進んでいる。脳のある部分を電気で刺激すると、体外離脱に似た感覚を人工的に起こせることが分かってきた。また、眠りと目覚めのはざまや、極度の疲労・ストレスのときに起こりやすいことも知られている。
+
+こうしたことから、多くの専門家は、体外離脱を「脳が生み出す感覚のずれ」として説明しようとしている。とはいえ、その仕組みのすべてが解明されたわけではない。`,
+  src:"https://ja.wikipedia.org/wiki/体外離脱"},
+
+ {cat:"歴史のミステリー",truth:"maybe",emoji:"🏛️",caution:1,
+  title:"なぜ都市を捨てたのか「マヤ文明」",
+  excerpt:"栄えた都市が次々と放棄された。衰退の理由は今も謎。",
+  body:`中米のジャングルに、巨大なピラミッドや精緻な暦、高度な文字を残した「マヤ文明」。天文学や数学にも秀でた、古代アメリカを代表する文明だ。
+
+このマヤ文明には、大きな謎がある。最も栄えていた時代の都市の多くが、ある時期を境に、次々と放棄されてしまったのだ。人々は壮大な石の都市を捨て、どこかへ去っていった。
+
+なぜ、繁栄した文明が衰退したのか。長く続いた干ばつ（気候変動）、人口増加による環境の悪化、都市どうしの戦争、政治の崩壊——さまざまな原因が考えられているが、決め手となる一つの答えは出ていない。おそらく複数の要因が重なったとみられている。
+
+なお「マヤ＝滅亡した」と思われがちだが、マヤの人々の子孫は今も中米で暮らしている。消えたのは“古典期の巨大都市”だったのだ。`,
+  src:"https://ja.wikipedia.org/wiki/マヤ文明"},
+
+ {cat:"歴史のミステリー",truth:"solved",emoji:"🔡",caution:1,
+  title:"謎の文字を解いた鍵「ロゼッタ・ストーン」",
+  excerpt:"読めなかったヒエログリフ。一枚の石が、その封印を解いた。",
+  body:`古代エジプトの神聖文字「ヒエログリフ」は、長いあいだ、誰も読むことのできない“謎の文字”だった。その封印を解く鍵となったのが、「ロゼッタ・ストーン」だ。
+
+これは、エジプトで発見された一枚の石碑で、同じ内容の文章が、ヒエログリフ、当時の民衆文字、そしてギリシャ文字という、3種類の文字で刻まれていた。
+
+学者たちは、すでに読めるギリシャ文字の部分を手がかりに、対応するヒエログリフを少しずつ解き明かしていった。そして19世紀、フランスのシャンポリオンが、ついにヒエログリフの解読に成功する。
+
+これは「未解決の謎」ではなく、むしろ「大きな謎を解いた鍵」の物語だ。一枚の石が、忘れ去られていた古代エジプトの言葉と歴史への扉を開いた、輝かしい発見である。`,
+  src:"https://ja.wikipedia.org/wiki/ロゼッタ・ストーン"},
+
+ {cat:"ホラー・心霊",truth:"maybe",emoji:"🪑",caution:3,
+  title:"騒がしい霊のしわざ？「ポルターガイスト現象」",
+  excerpt:"物が動き、音が鳴る。霊か、それとも現実的な原因か。",
+  body:`誰も触れていないのに物が動く、ひとりでに音が鳴る、扉が開閉する——こうした怪現象は「ポルターガイスト」と呼ばれる。ドイツ語で「騒がしい霊」を意味する言葉だ。
+
+世界各地で報告例があり、特に思春期の子どもがいる家庭で起きやすい、とも言われてきた。霊や超常的な力のしわざとして語られることも多い。
+
+一方で、原因を探ると説明のつく例も多い。家の構造による振動やきしみ、地下水や配管の影響、すきま風、思い込み、そして注目を集めたい人による“仕込み”（いたずら）などだ。
+
+すべてが解明されているわけではないが、「ポルターガイスト」とされる出来事の多くには、こうした現実的な原因が見つかっている。それでも、説明のつかない事例の報告は、今も後を絶たない。`,
+  src:"https://ja.wikipedia.org/wiki/ポルターガイスト現象"},
+ {cat:"歴史のミステリー",truth:"maybe",emoji:"⚰️",caution:3,
+  title:"墓を暴いた者は死ぬ？「ファラオの呪い」",
+  excerpt:"ツタンカーメンの墓の発掘後、関係者が相次いで死亡した。",
+  body:`1922年、エジプトでツタンカーメン王の墓が発見された。3000年以上も封印されていた、黄金の財宝に満ちた王墓の発見は、世界を熱狂させた。
+
+ところがその後、発掘に関わった人々が、次々と亡くなっていく。出資者の貴族が原因不明の高熱で急死したのを皮切りに、関係者の死が相次いだことから、「墓を暴いた者には呪いがふりかかる」という「ファラオの呪い」が、まことしやかに語られるようになった。
+
+しかし、冷静に調べると話は変わる。発掘に関わった大勢のうち、亡くなったのは一部にすぎず、多くは長生きしている。墓を発見した本人も、その後十年以上生きた。
+
+死亡率を統計的に検証しても、「呪い」を裏づける異常な傾向は見られない。墓の中のカビや細菌が一部の死因という説もあるが、“呪い”そのものは、後から大きく膨らんだ物語だったとみられている。`,
+  src:"https://ja.wikipedia.org/wiki/ファラオの呪い"},
+ {cat:"歴史のミステリー",truth:"maybe",emoji:"🌄",caution:1,
+  title:"誰が築いたのか分からない都市「テオティワカン」",
+  excerpt:"巨大ピラミッドが並ぶ古代都市。建てた民族も滅んだ理由も謎。",
+  body:`メキシコシティの近郊に、巨大な石造りの都市遺跡「テオティワカン」が広がっている。「太陽のピラミッド」「月のピラミッド」と呼ばれる壮大な建造物が立ち並び、最盛期には十万人以上が暮らした、古代アメリカ最大級の都市だった。
+
+ところが、この都市には大きな謎がある。これほど巨大な都市を築いた人々が、いったい誰だったのか——民族も、話していた言葉も、よく分かっていないのだ。彼らは文字の記録をほとんど残さなかった。
+
+さらに、繁栄を極めたこの都市は、ある時期に火災や破壊の跡を残して衰退し、放棄されてしまう。その原因も定かではない。
+
+後にこの地を訪れたアステカの人々は、廃墟となった壮大な都市に圧倒され、「神々が集う場所」を意味する「テオティワカン」と名づけた。築いた者の正体も、滅びた理由も謎のまま、巨大な遺跡だけが残されている。`,
+  src:"https://ja.wikipedia.org/wiki/テオティワカン"},
+
+ {cat:"歴史のミステリー",truth:"maybe",emoji:"🏙️",caution:1,
+  title:"読めない文字を残した「インダス文明」",
+  excerpt:"4000年前の計画都市と下水道。なぜ消えたのかは謎のまま。",
+  body:`今からおよそ4000年以上前、現在のインドやパキスタンを流れるインダス川の流域に、高度な都市文明が栄えていた。「インダス文明」だ。
+
+モヘンジョダロやハラッパーといった都市の遺跡からは、整然と区画された街路、れんが造りの建物、そして当時としては驚くほど発達した下水道の設備まで見つかっている。計画的に作られた、清潔な都市だったことがうかがえる。
+
+だが、この文明には大きな謎が二つある。ひとつは、彼らが残した「インダス文字」がいまだに解読できていないこと。もうひとつは、これほど栄えた文明が、なぜ衰退し消えていったのかが分かっていないことだ。
+
+大規模な戦争の跡は乏しく、気候変動や川の流れの変化、環境の悪化などが原因と考えられているが、決め手はない。読めない文字とともに、多くを謎に包んだ古代文明である。`,
+  src:"https://ja.wikipedia.org/wiki/インダス文明"},
+
+ {cat:"歴史のミステリー",truth:"fact",emoji:"🌋",caution:3,
+  title:"一瞬で埋もれた古代都市「ポンペイ」",
+  excerpt:"火山噴火で灰に飲まれた町。最期の姿がそのまま残された。",
+  body:`西暦79年、イタリアのナポリ近郊にあったローマ都市ポンペイは、一瞬にしてその歴史を止められた。近くのヴェスヴィオ火山が大噴火を起こし、町全体が大量の火山灰に飲み込まれたのだ。
+
+逃げ遅れた多くの人々が命を落とし、町は厚い灰の下に埋もれて、やがて忘れ去られた。
+
+皮肉なことに、この灰が町を“封印”したことで、ポンペイは奇跡的な形で保存された。18世紀以降の発掘で、当時の家々や店、壁の落書き、食べかけの食事までもが、ほぼそのままの姿で現れたのだ。
+
+特に人々を驚かせたのが、灰に埋もれた犠牲者たちの空洞に石膏を流し込んで作られた像だ。最期の瞬間の姿が、生々しく形に残されていた。古代ローマの日常を“冷凍保存”した、実在の悲劇の町である。`,
+  src:"https://ja.wikipedia.org/wiki/ポンペイ"},
+
+ {cat:"UFO・宇宙人",truth:"maybe",emoji:"🔦",caution:2,
+  title:"1万人が見た光「フェニックスの光」",
+  excerpt:"アリゾナの夜空に並んだ謎の光。照明弾か、それとも。",
+  body:`1997年3月13日の夜、アメリカ・アリゾナ州のフェニックスを中心とした広い範囲の上空に、複数の謎の光が現れた。光は長い時間にわたって目撃され、V字型に並んでゆっくり動いた、とも証言された。
+
+目撃者は数千人から1万人にのぼるともいわれ、史上最大規模のUFO目撃事件として、世界中で大きく報じられた。
+
+事件後、アメリカ空軍は「軍の演習で投下された照明弾だった」と説明した。ゆっくり落下する照明弾が、編隊を組んだ光のように見えたのだ、というわけだ。
+
+この説明で多くは決着したが、「動きや形が照明弾とは思えない」として、今もUFOだったと信じる人々は少なくない。大勢が同じ夜空を見上げた、有名な集団目撃事件だ。`,
+  src:"https://ja.wikipedia.org/wiki/フェニックスの光"},
+
+ {cat:"未確認生物",truth:"maybe",emoji:"🐒",caution:2,
+  title:"つぎはぎの姿の妖怪「鵺」",
+  excerpt:"サルの顔にヘビの尾。夜に不気味な声で鳴く、姿なき怪物。",
+  body:`「鵺（ぬえ）」は、日本に古くから伝わる、姿の入り混じった妖怪だ。サルの顔、タヌキの胴、トラの手足、ヘビの尾を持ち、夜に不気味な声で鳴くとされる。
+
+有名なのは、平安時代の武将・源頼政が、御所に夜な夜な現れて天皇を悩ませた鵺を弓で射落とした、という伝説だ。古典の『平家物語』などにも語られている。
+
+正体については、さまざまな説がある。鵺の鳴き声とされるものは、実在する鳥「トラツグミ」が夜に響かせる、物悲しい声ではないか、とも言われている。得体の知れない夜の声への、人々の恐れが生んだ妖怪なのかもしれない。
+
+今では「正体不明の人物・物事」を「鵺のような」と表現することもある。日本の闇が生んだ、姿なき怪物だ。`,
+  src:"https://ja.wikipedia.org/wiki/鵺"},
+
+ {cat:"未確認生物",truth:"maybe",emoji:"🌨️",caution:2,
+  title:"吹雪の夜に現れる「雪女」",
+  excerpt:"白い着物の美女が、出会った者を凍えさせる。雪国の妖怪。",
+  body:`「雪女」は、雪深い地方に古くから伝わる妖怪だ。吹雪の夜に、白い着物をまとった美しい女性の姿で現れ、出会った人を凍えさせて命を奪う、と語られる。
+
+地方によって伝承はさまざまで、子どもを抱かせようとする話や、人と結婚して家族を持つが、正体を知られて去っていく、という切ない物語もある。小泉八雲（ラフカディオ・ハーン）が紹介した話が特に有名だ。
+
+その背景には、雪国の厳しい自然があると考えられている。吹雪の中で命を落とす危険、低体温で意識がもうろうとする中で見る幻——そうした雪の恐ろしさが、美しくも冷たい妖怪の姿に重ねられたのだろう。
+
+実在は確認されていないが、雪国の人々が雪に抱いてきた畏れと美意識が生んだ、日本を代表する妖怪である。`,
+  src:"https://ja.wikipedia.org/wiki/雪女"},
+
+ {cat:"未確認生物",truth:"maybe",emoji:"👺",caution:1,
+  title:"山に棲む翼の怪人「天狗」",
+  excerpt:"赤い顔に高い鼻、空を飛ぶ神通力。山の不思議の主とされた。",
+  body:`赤い顔に高い鼻、山伏のような装束で、手にはうちわ。背中に翼を持ち、空を自在に飛び、人間離れした神通力を操る——「天狗」は、日本の山々に棲むとされる妖怪だ。
+
+古くから、山で起こる不可解な出来事は天狗のしわざとされてきた。山中で突然人が消える「神隠し」も、天狗が連れ去ったと語られることがあった。修行者が高慢になると天狗になる、という言い伝えもある。
+
+その姿の由来には諸説ある。山で修行する修験者の姿が誇張されたもの、外国から伝わった鼻の高い人物のイメージ、あるいは山の神への信仰が変化したもの、などだ。
+
+畏れと敬いの入り混じった存在として、天狗は今も各地の山岳信仰や祭り、地名の中に生き続けている。`,
+  src:"https://ja.wikipedia.org/wiki/天狗"},
+
+ {cat:"未解決事件",truth:"maybe",emoji:"👸",caution:3,
+  title:"生き延びた皇女？「アナスタシア」",
+  excerpt:"処刑された皇帝一家。末娘だけ生存したという噂が広まった。",
+  body:`1918年、ロシア革命のさなか、最後の皇帝ニコライ2世の一家が処刑された。その末娘が、皇女アナスタシアだ。
+
+処刑直後から、「混乱の中でアナスタシアだけは生き延びたのではないか」という噂が流れ始める。やがてヨーロッパ各地に「自分こそアナスタシアだ」と名乗る女性が、何人も現れた。中でもアンナ・アンダーソンという女性は最も有名で、長い裁判まで起こした。
+
+皇女は本当に生き延びたのか——この謎は、20世紀を通じて人々の関心を集め続けた。
+
+決着がついたのは後年のことだ。一家の遺骨が発見され、DNA鑑定によって全員が殺害されていたことが確認された。アンナ・アンダーソンも、鑑定の結果アナスタシアではなく別の女性だったと判明した。長く語られた生存説は、こうして幕を閉じた。`,
+  src:"https://ja.wikipedia.org/wiki/アナスタシア・ニコラエヴナ"},
+
+ {cat:"失踪・消失",truth:"maybe",emoji:"🍃",caution:2,
+  title:"こつぜんと消える「神隠し」",
+  excerpt:"人が突然いなくなり、思わぬ場所で見つかる。日本古来の謎。",
+  body:`ある日突然、人が——特に子どもが——こつぜんと姿を消してしまう。村中で探しても見つからず、しばらくして思わぬ場所でぼんやりと発見される。日本では古くから、こうした失踪を「神隠し」と呼んできた。
+
+天狗や狐、山の神などのしわざとされ、神隠しに遭わないためのまじないや、消えた人を呼び戻すための儀式も各地に伝わっている。
+
+もちろん、その多くには現実的な背景があると考えられている。子どもの事故や迷子、誘拐、家出、あるいは記憶を失っての彷徨（とくに精神的な要因によるもの）などだ。説明のつかない失踪に、人々が「神隠し」という物語を与えた、とも言える。
+
+神秘的な響きを持つこの言葉は、説明できない“消失”への、昔の人々の畏れを今に伝えている。`,
+  src:"https://ja.wikipedia.org/wiki/神隠し"},
+
+ {cat:"失踪・消失",truth:"maybe",emoji:"🌴",caution:1,
+  title:"海に沈んだ太平洋の大陸「ムー大陸」",
+  excerpt:"高度文明を持つ巨大大陸が一夜で水没した、という物語。",
+  body:`かつて太平洋に、高度な文明を持つ巨大な大陸「ムー」が存在した。しかし大地震などの天変地異によって、一夜にして海中に沈んでしまった——そんな“失われた大陸”の物語がある。
+
+このムー大陸を世に広めたのは、20世紀前半のイギリス人、ジェームズ・チャーチワードだ。彼は、古代の粘土板などからこの大陸の存在を“解読”したと主張し、その姿を詳細に描き出した。
+
+アトランティス伝説と並んで、ムー大陸は多くの人々の想像をかき立て、小説や漫画などにも数多く登場した。
+
+しかし、その実在を裏づける地質学的・考古学的な証拠は見つかっていない。太平洋の海底に、そのような大陸が沈んだ痕跡もない。多くの研究者は、ムー大陸はチャーチワードの創作だったとみている。それでも、海に沈んだ理想郷の物語は、今も人々を魅了し続けている。`,
+  src:"https://ja.wikipedia.org/wiki/ムー大陸"},
+
+ {cat:"失踪・消失",truth:"maybe",emoji:"🔍",caution:1,
+  title:"ミステリー作家自身の失踪「アガサ・クリスティ」",
+  excerpt:"車を残して消えた人気作家。11日後、別名でホテルに。",
+  body:`『そして誰もいなくなった』などで知られる、世界的なミステリー作家アガサ・クリスティ。実は彼女自身が、現実に“失踪事件”の主人公になったことがある。
+
+1926年12月のある夜、クリスティは自宅から車で出かけたまま、姿を消した。翌朝、彼女の車は人けのない場所に乗り捨てられた状態で見つかる。だが、本人はどこにもいない。
+
+人気作家の突然の失踪に世間は騒然となり、大規模な捜索が行われた。そして11日後、彼女はある温泉地のホテルで、別人の名前で滞在しているところを発見された。
+
+本人は当時の記憶がないと語り、なぜ失踪したのかを生涯はっきりとは説明しなかった。極度のストレスによる一時的な記憶喪失だったとも言われるが、真相は今も藪の中。ミステリーの女王自身が残した、本物の謎だ。`,
+  src:"https://ja.wikipedia.org/wiki/アガサ・クリスティ"},
+
+ {cat:"自然の怪現象",truth:"fact",emoji:"🔵",caution:2,
+  title:"墓場に浮かぶ青い炎「鬼火」",
+  excerpt:"夜の湿地や墓地にふわりと灯る怪火。その正体は。",
+  body:`夜の墓地や湿地で、青白い炎のような光がふわりと浮かぶ——「鬼火」や「狐火」「人魂」と呼ばれる怪火は、世界各地で古くから恐れられ、霊魂のしわざと語られてきた。
+
+日本でも、墓場に出る火の玉として、数々の怪談に登場する。
+
+だが、その正体については科学的な説明が試みられてきた。有力なのは、湿地や墓地で、動植物が分解されるときに発生する可燃性のガス（メタンやリンの化合物など）が、自然に発光・燃焼するという説だ。低い位置をふわふわと漂う様子も、これで説明できるとされる。
+
+すべての事例が解明されたわけではないが、多くの「怪火」の背景には、こうした自然現象が隠れていたと考えられている。闇への恐れが、ただの光を“鬼の火”に変えたのだ。`,
+  src:"https://ja.wikipedia.org/wiki/鬼火"},
+
+ {cat:"自然の怪現象",truth:"maybe",emoji:"🌪️",caution:2,
+  title:"いつの間にか切れている「鎌鼬」",
+  excerpt:"つむじ風とともに体に切り傷。痛みも出血もないという怪。",
+  body:`歩いていると、突然、鋭い刃物で切ったような切り傷が体にできる。しかも、なぜか痛みや出血がほとんどない——日本では古くから、こうした怪現象を「鎌鼬（かまいたち）」のしわざとしてきた。
+
+鎌のような爪を持つ、イタチに似た妖怪が、つむじ風とともに現れて人を切りつける、と語られた。地方によっては、3匹一組で「転ばせる・切る・薬を塗る」役を分担する、という言い伝えもある。
+
+その正体については、いくつかの説がある。かつては「真空状態が皮膚を裂く」という説が広まったが、これは否定的に見られている。現在では、冷たく乾いた強風で皮膚がひび割れたり、転んだ瞬間に小石などでできた傷に、寒さのせいで気づきにくいだけ、という説明が有力だ。
+
+冬の風の中で起きる不思議に、人々が与えた妖怪の名である。`,
+  src:"https://ja.wikipedia.org/wiki/鎌鼬"},
+
+ {cat:"自然の怪現象",truth:"fact",emoji:"🌈",caution:1,
+  title:"霧に映る巨大な影「ブロッケン現象」",
+  excerpt:"山頂で霧に浮かぶ巨人と虹の輪。神や妖怪と恐れられた。",
+  body:`山の頂上で、太陽を背にして雲や霧に向かって立つと、目の前の霧に巨大な人影が浮かび上がり、その頭のまわりに虹色の光の輪がかかることがある。「ブロッケン現象」と呼ばれる、神秘的な光景だ。
+
+この巨大な影は、ほかでもない、自分自身の影だ。背後からの太陽の光が前方の霧の粒に当たって影を映し出し、光が回折することで、虹色の輪（グローリー）が生まれる。
+
+昔の人々は、この霧に浮かぶ巨大な人影を、山の神や妖怪、あるいは仏の姿（ご来迎）と見て、畏れたり拝んだりした。
+
+正体は分かっている、れっきとした光学現象だ。それでも、雲海の上に自分の姿が神々しく映し出される光景は、今も登山者を感動させる、自然のスペクタクルである。`,
+  src:"https://ja.wikipedia.org/wiki/ブロッケン現象"},
+
+ {cat:"予言・超能力",truth:"maybe",emoji:"⏰",caution:2,
+  title:"掲示板に現れた“未来人”「ジョン・タイター」",
+  excerpt:"2036年から来たと名乗り、予言を残して消えた謎の人物。",
+  body:`2000年から2001年にかけて、アメリカのインターネット掲示板に、「自分は2036年から来た未来人だ」と名乗る人物が現れた。彼は「ジョン・タイター」と名乗った。
+
+タイターは、自分はタイムマシンで過去に来たと主張し、軍の任務の内容や、タイムマシンの仕組みらしき図、そして未来に起こるという出来事の“予言”を書き込んでいった。やがて「2036年へ帰る」と言い残し、姿を消した。
+
+彼が語った近未来の予言の多く（大規模な内戦など）は、実際には現実にならなかった。
+
+正体は今も不明で、手の込んだ作り話（創作）だったというのが大方の見方だ。それでも、ジョン・タイターの物語はネット上で語り継がれ、“未来人”の代名詞のような存在になっている。インターネット時代が生んだ、新しいタイプの謎である。`,
+  src:"https://ja.wikipedia.org/wiki/ジョン・タイター"},
+
+ {cat:"超常現象",truth:"maybe",emoji:"🎞️",caution:2,
+  title:"念じて写真に焼きつける「念写」",
+  excerpt:"明治の日本を揺るがせた“思念を写す”超能力騒動。",
+  body:`頭の中で思い浮かべたイメージを、念じる力だけで写真の乾板やフィルムに焼きつける——そんな超能力が「念写」だ。
+
+日本では明治末期に大きな話題となった。御船千鶴子や長尾郁子といった女性が、念写の能力を持つとして注目され、東京帝国大学の心理学者・福来友吉が、これを真剣に研究した。
+
+しかし、実験は厳しい批判にさらされた。トリックの可能性が指摘され、実験の管理の甘さも問題となる。騒動の渦中で当事者が相次いで亡くなるなど、悲劇的な経過をたどり、念写研究は学界から退けられていった。
+
+本物の超能力だったのか、それとも巧妙な手品だったのか。今日では否定的に見られているが、当時の日本を揺るがせた、有名な超能力騒動として記憶されている。`,
+  src:"https://ja.wikipedia.org/wiki/念写"},
+
+ {cat:"超常現象",truth:"maybe",emoji:"🪙",caution:2,
+  title:"硬貨がひとりでに動く「こっくりさん」",
+  excerpt:"霊を呼ぶ遊びとされるが、その動きには科学的な説明がある。",
+  body:`紙に書いた文字や鳥居の上に硬貨を置き、複数人で指を添えて「こっくりさん、こっくりさん…」と呼びかけると、硬貨がひとりでに動いて質問に答える——「こっくりさん」は、日本でよく知られる“降霊術”の遊びだ。
+
+学校などで流行し、「狐の霊を呼び出す」などと語られて、子どもたちを怖がらせてきた。
+
+だが、その仕組みは説明がつく。鍵となるのが「不覚筋動（イデオモーター現象）」だ。これは、本人は動かしているつもりがないのに、無意識のうちに筋肉がわずかに動いてしまう現象。参加者全員の無意識の小さな力が合わさって、硬貨が“ひとりでに”動いているように感じられるのだ。
+
+霊の力ではなく、自分たちの体が起こしていた現象——とはいえ、暗示にかかりやすい状況での集団遊びには、注意が必要だとも言われている。`,
+  src:"https://ja.wikipedia.org/wiki/こっくりさん"},
+
+ {cat:"ホラー・心霊",truth:"maybe",emoji:"🐺",caution:3,
+  title:"満月の夜に獣に変わる「狼男」",
+  excerpt:"人が狼に変身し人を襲う。西洋に古くから伝わる恐怖の伝説。",
+  body:`満月の夜になると、人間が狼のような獣に姿を変え、凶暴になって人を襲う——「狼男（人狼）」の伝説は、ヨーロッパを中心に古くから語り継がれてきた。
+
+中世には、「自分は狼に変身した」と告白する人物が裁判にかけられた記録も残っている。狼が人々の生活を脅かす身近な脅威だった時代の、恐れの表れだったのだろう。
+
+その背景には、いくつかの現実的な要因も指摘されている。全身が毛で覆われる珍しい体質（多毛症）の人の存在や、精神的な病で「自分は獣だ」と思い込む症状、あるいは麦に生えるカビ（麦角）による幻覚などだ。
+
+こうした現実が、迷信や恐怖と結びつき、「狼男」という伝説に育っていったと考えられている。吸血鬼と並ぶ、西洋を代表する怪物だ。`,
+  src:"https://ja.wikipedia.org/wiki/狼男"},
+
+ {cat:"ホラー・心霊",truth:"maybe",emoji:"🧛",caution:3,
+  title:"墓からよみがえり血を吸う「吸血鬼」",
+  excerpt:"東欧に伝わる不死の怪物。その恐怖は死への無理解から生まれた。",
+  body:`夜になると棺から起き出し、生者の血を吸う不死の怪物「吸血鬼（ヴァンパイア）」。ドラキュラ伯爵のイメージで知られるが、その伝説は東欧などに古くから伝わっていた。
+
+かつてヨーロッパでは、「死んだはずの者が墓からよみがえり、血を吸いに来る」という噂が広まり、墓を掘り返して“処置”する騒ぎまで起きた。
+
+その背景には、当時の人々が死や病をうまく説明できなかったことがあると考えられている。土の中で遺体が変化する様子（血のようなものがにじむ、爪や髪が伸びて見える）が「まだ生きている」と誤解されたり、感染症が次々と人を死なせる様子が「死者が血を吸いに来る」と語られたりしたのだ。
+
+医学が未発達だった時代の恐れが生んだ怪物。それが今や、物語の人気者になっている。`,
+  src:"https://ja.wikipedia.org/wiki/吸血鬼"},
+
+ {cat:"感動",truth:"fact",emoji:"🐕‍🦺",caution:1,
+  title:"吹雪を越えて血清を運んだ犬「バルト」",
+  excerpt:"感染症に襲われた町へ、犬ぞりチームが命がけで薬を届けた。",
+  body:`1925年の冬、アラスカ北端の町ノームを、恐ろしい感染症ジフテリアが襲った。子どもたちの命を救うには、治療用の血清を一刻も早く運ぶ必要があった。だが、猛吹雪が町への道を閉ざしていた。
+
+飛行機も船も使えない。そこで人々が頼ったのが、犬ぞりだった。約20チームもの犬ぞりが、1000キロを超える道のりをリレー方式でつなぎ、血清を運ぶ決死の輸送が始まる。
+
+吹雪と極寒の中、犬たちは走り続けた。最も過酷で長い区間を走り抜いたのはトーゴーというリーダー犬のチームだったが、最後の区間で町まで血清を届けたチームの先頭にいたのが、シベリアン・ハスキーの「バルト」だった。
+
+こうして血清は無事に届き、多くの命が救われた。バルトの像は今もニューヨークのセントラルパークに立ち、人と犬が力を合わせた“奇跡のレース”を伝えている。`,
+  src:"https://ja.wikipedia.org/wiki/バルト_(犬)"},
+ {cat:"事件・事故",truth:"solved",emoji:"🖼️",caution:1,
+  title:"名画が消えた「モナ・リザ盗難事件」",
+  excerpt:"ルーヴルから世界の至宝が消失。この事件が“世界一の絵”を生んだ。",
+  body:`今や世界一有名な絵画「モナ・リザ」。だが、その名声を決定的にしたのは、皮肉にも一つの盗難事件だったとも言われる。
+
+1911年、パリのルーヴル美術館から、モナ・リザが忽然と姿を消した。世界的傑作が盗まれたというニュースは、世界中を駆けめぐる。捜査は難航し、詩人アポリネールや画家ピカソまで疑われた（のちに無関係と判明）。
+
+犯人が判明したのは、2年後のことだ。盗んだのは、かつてルーヴルで働いていたイタリア人の職人ペルージャ。彼は休館日に内部に潜み、絵を上着の下に隠して堂々と持ち出していた。
+
+ペルージャは「イタリアの宝はイタリアに返すべきだ」と動機を語った。絵はイタリアで売ろうとしたところを発見され、無事ルーヴルに戻った。この大事件が連日報じられたことで、モナ・リザは“世界一有名な絵”になったのだ。`,
+  src:"https://ja.wikipedia.org/wiki/モナ・リザ"},
+
+ {cat:"事件・事故",truth:"maybe",emoji:"🎨",caution:2,
+  title:"空の額縁が残る「ガードナー美術館盗難事件」",
+  excerpt:"警官を装った2人組が名画13点を強奪。今も未解決の大事件。",
+  body:`1990年3月、アメリカ・ボストンのイザベラ・スチュワート・ガードナー美術館で、美術史上最大級の盗難事件が起きた。
+
+深夜、警官を装った2人組が「通報を受けた」と偽って館内に入り込み、警備員を縛り上げた。そして約1時間かけて、フェルメールやレンブラントの名画など、13点もの作品を悠々と奪い去ったのだ。被害総額は5億ドルとも言われる。
+
+事件から30年以上が過ぎた今も、作品は1点も見つかっておらず、犯人も逮捕されていない。FBIが追い、美術館は多額の懸賞金をかけているが、有力な手がかりはつかめていない。
+
+盗まれた絵が飾られていた場所には、創設者の遺志もあって、今も“空っぽの額縁”がそのまま掛けられている。作品の帰りを待ち続ける、未解決の大事件だ。`,
+  src:"https://ja.wikipedia.org/wiki/イザベラ・スチュワート・ガードナー美術館"},
+
+ {cat:"事件・事故",truth:"solved",emoji:"🚂",caution:2,
+  title:"世紀の犯罪「大列車強盗」",
+  excerpt:"郵便列車を襲い巨額を奪った15人組。逃亡犯の物語も有名。",
+  body:`1963年、イギリスで「世紀の犯罪」と呼ばれる大胆な強盗事件が起きた。
+
+8月のある未明、グラスゴーからロンドンへ向かう郵便列車を、15人組の強盗団が襲った。彼らは線路脇の信号機に細工をして列車を停め、積まれていた大量の旧紙幣——当時の260万ポンド（現在の数十億円規模）を奪って逃走した。
+
+銃こそ使わなかったが、列車の運転士が殴られて重傷を負うなど、手荒い犯行だった。
+
+周到な計画だったが、隠れ家に残された指紋などから足がつき、メンバーはほぼ全員が逮捕される。中でもロニー・ビッグズは、服役中に脱獄して海外へ逃亡。30年以上も逃げ続けた末に帰国し、世間を騒がせた。映画にもなった、犯罪史に残る大事件だ。`,
+  src:"https://ja.wikipedia.org/wiki/大列車強盗_(1963年の事件)"},
+
+ {cat:"事件・事故",truth:"fact",emoji:"🗼",caution:1,
+  title:"エッフェル塔を売った詐欺師「ヴィクトール・ルースティヒ」",
+  excerpt:"政府高官になりすまし、パリの象徴を“スクラップ”として売却。",
+  body:`「エッフェル塔を売った男」——そう呼ばれる伝説の詐欺師がいる。ヴィクトール・ルースティヒだ。
+
+1925年のパリ。当時、老朽化したエッフェル塔の維持費が問題視されていた。ルースティヒはそこに目をつけ、フランス政府の高官になりすます。そして6人の鉄スクラップ業者をひそかに集め、「政府は塔を解体する。その鉄くずを売却する。これは極秘だ」と持ちかけた。
+
+信じ込んだ業者の一人から、彼は大金を騙し取って姿を消した。だまされた業者は、恥ずかしさから訴え出ることもできなかった。あろうことか、ルースティヒは後に同じ手口をもう一度試みている。
+
+偽の紙幣製造機を売りつける詐欺なども働いた彼は、最終的にアメリカで逮捕された。人の欲と見栄につけ込んだ、史上もっとも大胆な詐欺師の一人だ。`,
+  src:"https://ja.wikipedia.org/wiki/ヴィクトール・ルースティヒ"},
+
+ {cat:"事件・事故",truth:"fact",emoji:"💸",caution:1,
+  title:"自転車操業の出資金詐欺「ポンジ・スキーム」",
+  excerpt:"“高配当”の正体は、後から来た人の金。詐欺の代名詞になった男。",
+  body:`「ポンジ・スキーム」——出資金詐欺の代名詞となっているこの言葉は、ある実在の人物の名前に由来する。チャールズ・ポンジだ。
+
+1920年ごろ、アメリカで活動したポンジは、「短期間で高い配当を出す」とうたって投資家から資金を集めた。だが、その配当の正体は、運用で得た利益ではなかった。後から入ってきた新しい出資者のお金を、先の出資者への“配当”として回していただけだったのだ。
+
+この仕組みは、新たな出資者が増え続けないと成り立たない。やがて資金繰りが行き詰まって破綻し、多くの人が大金を失い、ポンジは逮捕された。
+
+中身のない“高配当”で人を集め、自転車操業で回す——この詐欺の構造は、形を変えて今も世界中で繰り返されている。彼の名は、その警告として残り続けている。`,
+  src:"https://ja.wikipedia.org/wiki/チャールズ・ポンジ"},
+
+ {cat:"事件・事故",truth:"solved",emoji:"🦴",caution:1,
+  title:"科学を40年だました捏造「ピルトダウン人」",
+  excerpt:"“サルと人の中間”の化石。だが、それは巧妙な作り物だった。",
+  body:`20世紀初め、進化の謎を解く大発見とされたものがあった。1912年にイギリスで見つかったとされる頭骨の化石、「ピルトダウン人」だ。
+
+それは、人間のような頭蓋骨と、類人猿のような顎を併せ持っていた。「サルと人の中間（ミッシング・リンク）」を示す証拠だとして、学界でも長く受け入れられた。
+
+しかし約40年後、最新の年代測定などによって、衝撃の事実が判明する。これは捏造だったのだ。中世の人間の頭蓋骨に、オランウータンの顎を組み合わせ、古く見えるように着色し、歯を削って加工した“作り物”だった。
+
+誰が、何のために仕組んだのかは、はっきりしていない。科学を40年ものあいだだまし続けた、有名な捏造事件として語り継がれている。`,
+  src:"https://ja.wikipedia.org/wiki/ピルトダウン人"},
+
+ {cat:"事件・事故",truth:"fact",emoji:"⚖️",caution:2,
+  title:"国を二分した冤罪「ドレフュス事件」",
+  excerpt:"スパイの濡れ衣を着せられた軍人。偏見と組織の論理が暴走した。",
+  body:`19世紀末のフランスを、根底から揺るがした冤罪事件がある。「ドレフュス事件」だ。
+
+1894年、ユダヤ系の軍人ドレフュス大尉が、ドイツに軍事機密を売ったスパイだとして逮捕され、終身刑を言い渡された。だが、その証拠はずさんで、真犯人が別にいることを示す事実も次々と見つかった。
+
+それでも軍は、組織の体面を守るために誤りを認めようとしなかった。背景には、当時の社会に根強かったユダヤ人への偏見もあった。
+
+この不正に対し、作家エミール・ゾラが「私は弾劾する」と題した告発文を新聞に発表。世論を二分する大論争へと発展した。最終的にドレフュスの無実は認められ、名誉が回復された。
+
+偏見と組織の論理が、いかに無実の人を陥れるか——正義のあり方を問い続ける事件だ。`,
+  src:"https://ja.wikipedia.org/wiki/ドレフュス事件"},
+
+ {cat:"事件・事故",truth:"fact",emoji:"🕵️",caution:2,
+  title:"日本に潜んだ大物スパイ「ゾルゲ事件」",
+  excerpt:"ドイツ人記者の正体はソ連のスパイ。中枢に食い込んだ諜報網。",
+  body:`第二次世界大戦中の日本で、世界を驚かせた大規模なスパイ事件が発覚した。「ゾルゲ事件」だ。
+
+中心人物は、ドイツの新聞記者として日本に滞在していたリヒャルト・ゾルゲ。彼の正体は、ソ連のために働く凄腕のスパイだった。ゾルゲは、ドイツ大使館にも食い込んで信頼を得る一方、日本人の協力者（元朝日新聞記者の尾崎秀実ら）とともに、機密情報を集めてソ連へ送り続けていた。
+
+彼らがつかんだとされる情報の中には、戦争の行方を左右しかねない重大なものも含まれていたとされる。
+
+1941年、この諜報網は摘発され、ゾルゲと尾崎は逮捕、後に処刑された。一国の中枢に深く潜り込んだ、20世紀を代表するスパイ事件である。`,
+  src:"https://ja.wikipedia.org/wiki/ゾルゲ事件"},
+
+ {cat:"事件・事故",truth:"fact",emoji:"🧙",caution:3,
+  title:"宮廷を操った怪僧「ラスプーチンの暗殺」",
+  excerpt:"皇帝一家に取り入った謎の男。その最期はあまりに異様だった。",
+  body:`帝政ロシアの末期、宮廷で絶大な影響力を握った謎の人物がいた。「怪僧」とも呼ばれるグリゴリー・ラスプーチンだ。
+
+彼は皇帝一家にとり入った。皇太子の病（血友病）を不思議な力で和らげたとされ、皇后の絶大な信頼を得たのだ。やがて政治にまで口を出すようになり、彼を危険視する貴族たちの恨みを買っていく。
+
+1916年、ついに貴族らがラスプーチン暗殺を実行する。伝えられるところでは、毒を盛っても効かず、銃で撃たれてもなお抵抗し、最後は川に投げ込まれて絶命した——という、まるで怪物のような最期だった（ただし脚色も多いとされる）。
+
+彼の死の翌年、ロシア革命で帝政は崩壊する。一人の謎めいた男が、帝国の終わりに深い影を落とした事件だ。`,
+  src:"https://ja.wikipedia.org/wiki/グリゴリー・ラスプーチン"},
+
+ {cat:"事件・事故",truth:"maybe",emoji:"🎈",caution:3,
+  title:"数十秒で焼け落ちた巨大飛行船「ヒンデンブルク号爆発事故」",
+  excerpt:"空の豪華旅客船が着陸直前に炎上。飛行船時代の終わりを告げた。",
+  body:`1937年、当時の航空技術の象徴だった巨大飛行船「ヒンデンブルク号」が、悲劇的な最期を迎えた。
+
+全長245メートルにもなるこの飛行船は、ドイツとアメリカを結ぶ豪華な空の旅を実現していた。だがその日、アメリカでの着陸態勢に入った直後、船体が突然炎に包まれ、わずか数十秒で焼け落ちてしまった。多くの乗客乗員が犠牲となり、その様子はラジオの実況や映像にも生々しく記録された。
+
+原因については、機体に詰められていた燃えやすい水素ガスに、静電気などで引火したという説が有力だ。だが、発火のきっかけが具体的に何だったのかは、はっきりとは特定されていない。
+
+この事故をきっかけに、飛行船の時代は急速に終わりを迎えた。技術の夢が一瞬で潰えた、象徴的な事故である。`,
+  src:"https://ja.wikipedia.org/wiki/ヒンデンブルク号爆発事故"},
+
+ {cat:"事件・事故",truth:"fact",emoji:"🟤",caution:3,
+  title:"甘い波が街を襲った「ボストン糖蜜災害」",
+  excerpt:"巨大タンクが破裂し、900万リットルの糖蜜が洪水となって町へ。",
+  body:`1919年、アメリカ・ボストンで、世界でも類を見ない奇妙な災害が起きた。「糖蜜（とうみつ）の洪水」だ。
+
+事件の主役は、巨大なタンクに貯蔵されていた大量の糖蜜（砂糖を作る過程でできる、どろりとした甘い液体）だった。ある日、このタンクが突然破裂。中から約900万リットルもの糖蜜が、巨大な波となって街路へあふれ出したのだ。
+
+高さ数メートルにもなった粘り気のある黒い波は、すさまじい速さで街を襲い、建物を押しつぶし、人や馬をのみ込んだ。多くの死傷者が出る大惨事となった。
+
+甘いはずの糖蜜が凶器になるという、信じがたい出来事。原因はタンクの強度不足などとされ、安全管理の重要性を示す教訓にもなった。実際に起きた、奇妙で痛ましい災害である。`,
+  src:"https://ja.wikipedia.org/wiki/ボストン糖蜜災害"},
+
+ {cat:"事件・事故",truth:"maybe",emoji:"🎺",caution:2,
+  title:"童話の裏に実話？「ハーメルンの笛吹き男」",
+  excerpt:"130人の子どもが消えたという古い記録。おとぎ話の元になった謎。",
+  body:`グリム童話などで知られる「ハーメルンの笛吹き男」。ネズミ退治の報酬を町に踏み倒された男が、笛の音で町中の子どもたちをどこかへ連れ去ってしまう、という不気味な物語だ。
+
+実はこの話、ただのおとぎ話ではない可能性がある。ドイツのハーメルンには、「1284年、130人の子どもが姿を消した」という趣旨の、古い記録が残されているのだ。
+
+つまり、童話の背景には、本当に大勢の子どもが一度にいなくなる、という実際の出来事があったのではないか、と考えられている。
+
+その正体については諸説ある。新天地への移住（植民）に若者が連れられていった、疫病や事故、あるいは何らかの遠征に加わった——などだ。だが、確かなことは分かっていない。おとぎ話の影に、本物の“集団失踪”が隠れているのかもしれない。`,
+  src:"https://ja.wikipedia.org/wiki/ハーメルンの笛吹き男"},
+
+ {cat:"事件・事故",truth:"maybe",emoji:"🔥",caution:3,
+  title:"なぜ裏切ったのか「本能寺の変」",
+  excerpt:"天下統一目前の信長を、家臣・明智光秀が討った。動機は今も謎。",
+  body:`1582年、天下統一を目前にしていた武将・織田信長が、京都の本能寺で家臣の明智光秀に襲われ、命を落とした。日本史上、最も有名な事件のひとつ「本能寺の変」だ。
+
+わずかな手勢しか連れていなかった信長は、光秀の大軍に囲まれ、寺に火を放って自害したと伝えられる。
+
+この事件の最大の謎は、「なぜ光秀は、主君である信長を裏切ったのか」だ。動機をめぐっては、信長への私的な恨み（怨恨説）、自分が滅ぼされる前にという不安、天下を狙う野望、あるいは背後に黒幕がいたとする説など、実にさまざまな見方が、今も唱えられ続けている。
+
+日本の歴史を大きく変えた一夜の事件。その動機の真相は、決定的な答えが出ないまま、人々の議論を呼び続けている。`,
+  src:"https://ja.wikipedia.org/wiki/本能寺の変"},
+
+ {cat:"事件・事故",truth:"fact",emoji:"⚔️",caution:3,
+  title:"雪の朝の暗殺「桜田門外の変」",
+  excerpt:"幕府の最高権力者・井伊直弼が、登城の途中で斬られた。",
+  body:`1860年、江戸城の桜田門の近くで、幕府の最高権力者が白昼に暗殺されるという、衝撃的な事件が起きた。「桜田門外の変」だ。
+
+殺されたのは、大老・井伊直弼。彼は「安政の大獄」で、開国に反対する勢力を厳しく弾圧していた。これに反発した水戸藩などの浪士たちが、雪の降る朝、登城する井伊の行列を襲撃したのだ。
+
+時の最高権力者が、江戸城のすぐそばで斬り殺される——この事件は、幕府の権威を大きく揺るがした。
+
+これをきっかけに、幕府の力はさらに衰え、世の中は明治維新へと向かう動乱の時代へ突き進んでいく。日本の歴史の大きな転換点となった、実在の暗殺事件である。`,
+  src:"https://ja.wikipedia.org/wiki/桜田門外の変"},
+
+ {cat:"事件・事故",truth:"fact",emoji:"✈️",caution:2,
+  title:"総理経験者が逮捕「ロッキード事件」",
+  excerpt:"航空機売り込みの巨額わいろ。日本政界を揺るがした大汚職。",
+  body:`1976年、日本の政界を激震させた大規模な汚職事件が発覚した。「ロッキード事件」だ。
+
+発端は、アメリカの航空機メーカー、ロッキード社が、自社の旅客機を売り込むために、各国の政府関係者に巨額のわいろを贈っていた、という疑惑だった。
+
+日本でも捜査が進むと、元内閣総理大臣の田中角栄が逮捕されるという、前代未聞の事態に発展した。「総理大臣の経験者が逮捕される」という事実は、社会に大きな衝撃を与えた。
+
+事件は長い裁判となり、政治と金の問題、そして政界の腐敗に、国民の厳しい目が向けられるきっかけとなった。戦後日本を代表する、巨大な政治スキャンダルである。`,
+  src:"https://ja.wikipedia.org/wiki/ロッキード事件"},
+
+ {cat:"事件・事故",truth:"fact",emoji:"🎌",caution:3,
+  title:"雪の日のクーデター「二・二六事件」",
+  excerpt:"青年将校が兵を率いて決起し、政府要人を襲撃した。",
+  body:`1936年（昭和11年）2月26日、雪の降る東京で、日本の歴史を揺るがすクーデター未遂事件が起きた。「二・二六事件」だ。
+
+国の現状に強い不満を抱いた陸軍の青年将校たちが、約1400名もの兵を率いて決起。「昭和維新」を掲げ、政府の要人たちを襲撃した。複数の要人が、この襲撃で命を落とした。
+
+将校たちは一時、東京の中心部を占拠した。しかし、彼らの行動は天皇の強い怒りを買い、「反乱軍」と位置づけられる。やがて部隊は鎮圧され、首謀者たちは処刑された。
+
+この事件の後、軍部の政治への影響力はかえって強まっていったとされる。日本が戦争へと傾斜していく時代の、大きな分岐点となった事件である。`,
+  src:"https://ja.wikipedia.org/wiki/二・二六事件"},
+
+ {cat:"事件・事故",truth:"fact",emoji:"🌉",caution:2,
+  title:"風で踊って崩れた橋「タコマナローズ橋」",
+  excerpt:"完成数か月のつり橋が、強くもない風でうねり、崩壊した。",
+  body:`1940年、アメリカで完成したばかりの巨大なつり橋「タコマナローズ橋」が、わずか数か月後に、衝撃的な形で崩壊した。
+
+その日、橋を襲ったのは、特別に強いわけでもない風だった。ところが橋は、風を受けてゆらゆらと波打ち始め、やがてその揺れがどんどん大きくなっていく。橋げたは、まるで紙のようにねじれ、うねり、ついに崩れ落ちてしまった。
+
+原因は、風によって生じた振動が、橋そのものの揺れと共鳴するように増幅され続けたためと考えられている。
+
+この崩壊の様子は映像にもはっきり記録され、世界中に衝撃を与えた。以来、橋の設計では風の影響が徹底的に研究されるようになる。失敗から多くを学んだ、有名な事故である。`,
+  src:"https://ja.wikipedia.org/wiki/タコマナローズ橋"},
+
+ {cat:"事件・事故",truth:"maybe",emoji:"🎼",caution:2,
+  title:"毒殺された？「モーツァルトの死」",
+  excerpt:"35歳で急死した天才。ライバル毒殺説の真相は。",
+  body:`天才作曲家ヴォルフガング・アマデウス・モーツァルトは、1791年、35歳の若さでこの世を去った。あまりに早すぎる死は、ある“噂”を生むことになる。
+
+それは、「ライバルの作曲家アントニオ・サリエリが、モーツァルトを毒殺したのではないか」という説だ。才能をねたんだサリエリが手を下した、という物語は、後に戯曲や映画『アマデウス』などで描かれ、広く知られるようになった。
+
+しかし、これを裏づける証拠はない。今日では、サリエリ毒殺説は事実ではない、というのが大方の見方だ。
+
+では、モーツァルトの本当の死因は何だったのか。リウマチ熱や感染症など、さまざまな病気が候補に挙げられているが、確定はしていない。天才の早すぎる死は、いまも完全には解き明かされていない。`,
+  src:"https://ja.wikipedia.org/wiki/ヴォルフガング・アマデウス・モーツァルト"},
+
+ {cat:"事件・事故",truth:"fact",emoji:"🎩",caution:3,
+  title:"禁酒法時代の帝王「アル・カポネ」",
+  excerpt:"密造酒で巨万の富を築いた大物ギャング。だが彼を倒したのは…。",
+  body:`1920〜30年代のアメリカ・シカゴに君臨した、伝説的なギャングがいた。「アル・カポネ」だ。
+
+当時のアメリカは、お酒の製造・販売を法律で禁じた「禁酒法」の時代。カポネは、この禁じられた酒を密造・密売することで巨万の富を築き、裏社会のボスにのし上がった。賭博などの違法な商売も仕切り、その勢力は警察や政治家にまで及んだとされる。
+
+カポネは対立する組織との抗争も繰り広げ、数々の事件に関わったと噂された。しかし、巧妙に証拠を残さず、なかなか罪に問えなかった。
+
+結局、彼を追い詰めたのは、意外にも「脱税」だった。莫大な収入を申告していなかったことで有罪となり、投獄されたのだ。法の網の外で暴れた大物が、税金で足をすくわれた——時代を象徴する事件である。`,
+  src:"https://ja.wikipedia.org/wiki/アル・カポネ"},
+
+ {cat:"事件・事故",truth:"maybe",emoji:"💃",caution:2,
+  title:"人々が踊り続けた怪事件「踊りのペスト」",
+  excerpt:"一人の女性から始まり、数百人が何週間も踊り狂ったという記録。",
+  body:`1518年、現在のフランス・ストラスブールで、にわかには信じがたい出来事が起きた。「踊りのペスト」とも呼ばれる事件だ。
+
+ある夏の日、一人の女性が、路上で突然、取りつかれたように踊りだした。彼女は何日も踊り続け、やがてその“踊り”が周囲に伝染していく。1か月ほどの間に、数十人から、一説には400人もの人々が、来る日も来る日も踊り続けたと、当時の医師や市の記録に残されている。
+
+中には、踊りすぎて倒れる者もいたという。
+
+なぜこんなことが起きたのか。原因はいまだに分かっていない。極度のストレスや不安からくる「集団ヒステリー（集団心因性疾患）」だったとする説や、麦に生えるカビ（麦角）による中毒説などがあるが、決め手はない。歴史に記録された、奇妙きわまる実在の事件だ。`,
+  src:"https://ja.wikipedia.org/wiki/1518年の踊り病"},
+];
+const ART=ARTICLES.map((a,i)=>({...a,id:"a"+i,catName:a.cat,no:String(i+1).padStart(3,"0"),
+  read:Math.max(2,Math.round(a.body.replace(/\s/g,"").length/150)),
+  shock:rnd(62,99),rate:(3+Math.random()*2),rateN:rnd(40,900),vF:rnd(120,1200),vK:rnd(120,1200)}));
+const CATEGORIES=[...new Set(ART.map(a=>a.cat))];
+
+/* ===== GAS連携：デプロイ後の /exec URL をここに貼る（空ならダミー動作のまま） ===== */
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxZzXnDUARu3HgM8Rz89pR5wiw5aIKsj7gHbslp9jpB9K0E-iSk-RQL6q_SZ0Znog1LeA/exec";   // 例: "https://script.google.com/macros/s/XXXXXXXX/exec"
+let STATS = {};       // GASから取得した集計 {id:{f,k,ss,sc}}
+async function gas(params){
+  const r = await fetch(GAS_URL + "?" + new URLSearchParams(params).toString());
+  return r.json();
+}
+async function loadStats(){
+  if(!GAS_URL) return;
+  try{ const res = await gas({action:"stats"}); if(res&&res.ok){ STATS = res.stats||{}; renderHome(); renderRank(); } }
+  catch(e){ console.warn("stats取得に失敗", e); }
+}
+function stat(id){ return STATS[id] || null; }
+/* 衝撃度スコア：GASに評価データがあれば平均★×20（0〜100換算）、無ければダミー値 */
+function shockScore(a){ const s=stat(a.id); return (s&&s.sc)? Math.round(s.ss/s.sc*20) : a.shock; }
+
+const DUMMY_CMT=[{n:"匿名さん",t:"これは諸説ありそう…でも夜に読むとゾッとする。"},{n:"通りすがり",t:"似た話を地元で聞いたことある。気になる。"}];
+
+const $=s=>document.querySelector(s);
+const get=id=>ART.find(a=>a.id===id);
+const stars=n=>"★".repeat(n)+"☆".repeat(5-n);
+function tagsHTML(a){const tr=TRUTH[a.truth];return `<div class="tags"><span class="cat">${a.cat}</span><span class="truth ${tr.c}">${tr.t}</span><span class="caution">閲覧注意 ${stars(a.caution)}</span><span class="fileno">No.${a.no}</span></div>`;}
+function artCard(a){return `<div class="art" onclick="openArt('${a.id}')"><div class="em">${a.emoji}</div>
+  <div class="b">${tagsHTML(a)}<h3>${a.title}</h3><p>${a.excerpt}</p><div class="read">📖 約${a.read}分 ・ 🔥衝撃度${shockScore(a)}</div></div></div>`;}
+// カード配列にインフィード広告を everyごとに挟む
+function withFeedAds(cards,every){
+  if(!every)return cards.join("");
+  let out="";cards.forEach((c,i)=>{out+=c;if((i+1)%every===0&&i!==cards.length-1)out+='<div class="adslot">広告スペース（インフィード）</div>';});
+  return out;
+}
+
+/* ===== ナビ ===== */
+const pages={home:"p-home",cat:"p-cat",rank:"p-rank",search:"p-search",save:"p-save"};
+document.querySelectorAll(".nav button").forEach(b=>{b.onclick=()=>{
+  document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
+  Object.values(pages).forEach(id=>$("#"+id).classList.remove("on"));$("#"+pages[b.dataset.tab]).classList.add("on");
+  $("#scroll").scrollTop=0; if(b.dataset.tab==="save")renderSave();
+};});
+
+/* ===== HOME（おすすめ＋最新） ===== */
+function renderHome(){
+  const h=ART[0];
+  $("#hero").innerHTML=`<div class="hero" onclick="openArt('${h.id}')">${tagsHTML(h)}<div class="em">${h.emoji}</div><h2>${h.title}</h2><p>${h.excerpt}</p><div class="read">📖 約${h.read}分で読める</div></div>`;
+  // おすすめ：カテゴリを混ぜて6件
+  const byCat=CATEGORIES.map(c=>ART.filter(a=>a.cat===c));const reco=[];let i=0;
+  while(reco.length<6){byCat.forEach(arr=>{if(arr[i]&&reco.length<6)reco.push(arr[i]);});i++;if(i>50)break;}
+  $("#recoRow").innerHTML=reco.map(a=>`<div class="rcard" onclick="openArt('${a.id}')"><div class="em">${a.emoji}</div><h4>${a.title}</h4><div class="caution">${stars(a.caution)}</div></div>`).join("");
+  // 最新：新しい順（ここでは末尾＝新着とみなして逆順）
+  $("#homeList").innerHTML=withFeedAds(ART.slice().reverse().slice(0,12).map(artCard),5);
+}
+
+/* ===== カテゴリ ===== */
+let curCat=CATEGORIES[0];
+function renderCat(){
+  $("#catTabs").innerHTML=CATEGORIES.map(c=>`<button class="tab ${c===curCat?"on":""}" onclick="selCat('${c}')">${c}</button>`).join("");
+  $("#catList").innerHTML=withFeedAds(ART.filter(a=>a.cat===curCat).map(artCard),6);
+}
+function selCat(c){curCat=c;renderCat();$("#scroll").scrollTop=0;}
+
+/* ===== ランキング（衝撃度） ===== */
+function renderRank(){
+  const top=ART.slice().sort((a,b)=>shockScore(b)-shockScore(a)).slice(0,30);
+  const rows=top.map((a,i)=>`<div class="rk" onclick="openArt('${a.id}')"><div class="n">${i+1}</div><div class="em">${a.emoji}</div><div class="b"><h3>${a.title}</h3><div class="sc">🔥 衝撃度 ${shockScore(a)} ・ 閲覧注意 ${stars(a.caution)}</div></div></div>`);
+  let html="";rows.forEach((r,i)=>{html+=r;if(i===2||i===9)html+='<div class="adslot">広告スペース（ランキング内）</div>';});
+  $("#rankList").innerHTML=html;
+}
+
+/* ===== 検索 ===== */
+function renderSearch(){
+  const q=$("#searchInput").value.trim();
+  if(!q){$("#searchArea").innerHTML='<div class="none">キーワードを入力してください</div>';return;}
+  const hit=ART.filter(a=>a.title.includes(q)||a.excerpt.includes(q)||a.cat.includes(q));
+  $("#searchArea").innerHTML=hit.length?`<div class="list">${hit.map(artCard).join("")}</div>`:'<div class="none">見つかりませんでした</div>';
+}
+$("#searchInput").addEventListener("input",renderSearch);
+
+/* ===== お気に入り ===== */
+const FKEY="nk_fav";let memF=[];
+function readF(){try{return JSON.parse(localStorage.getItem(FKEY)||"[]");}catch(e){return memF;}}
+function writeF(a){try{localStorage.setItem(FKEY,JSON.stringify(a));}catch(e){memF=a;}}
+function isFav(id){return readF().includes(id);}
+function toggleFav(id){let a=readF();a.includes(id)?a=a.filter(x=>x!==id):a.unshift(id);writeF(a);return a.includes(id);}
+function renderSave(){
+  const ids=readF();const box=$("#saveList");
+  if(!ids.length){box.innerHTML='<div class="empty"><span class="be">🤍</span>お気に入りの事件簿はまだありません。<br>気になる記事を ♡ で追加しよう。</div>';return;}
+  box.innerHTML=`<div class="list">${ids.map(get).filter(Boolean).map(artCard).join("")}</div>`;
+}
+
+/* ===== 投票・評価・コメント（ローカル保存・本番は集計先へ） ===== */
+function ls(k,d){try{return JSON.parse(localStorage.getItem(k))??d;}catch(e){return d;}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function getVote(id){return ls("nk_vote_"+id,null);}
+function getRate(id){return ls("nk_rate_"+id,null);}
+function getCmts(id){return ls("nk_cmt_"+id,[]);}
+
+/* ===== 記事ページ ===== */
+let HISTORY_OK=true;try{history.replaceState(history.state||{},"",location.href);}catch(e){HISTORY_OK=false;}
+function bodyHTML(a){const paras=(a.body||a.excerpt).split(/\n\s*\n/).map(p=>p.trim()).filter(Boolean);const mid=Math.max(1,Math.floor(paras.length/2)-1);return paras.map((p,i)=>`<p>${p}</p>`+(i===mid&&paras.length>=3?'<div class="adslot">広告スペース（記事の中ほど）</div>':'')).join("");}
+
+function voteHTML(a){
+  const my=getVote(a.id);
+  if(!my){
+    return `<div class="vote"><div class="vote-q">これ、事実？それともデマ？</div>
+      <div class="vote-btns"><button class="fact" onclick="vote('${a.id}','fact')">事実だと思う</button><button class="fake" onclick="vote('${a.id}','fake')">デマだと思う</button></div></div>`;
+  }
+  const s=stat(a.id);
+  let f,k;
+  if(s){ f=s.f; k=s.k; }                                   // GAS：みんなの本当の集計
+  else { f=a.vF+(my==="fact"?1:0); k=a.vK+(my==="fake"?1:0); } // ダミー
+  const t=(f+k)||1, pf=Math.round(f/t*100), pk=100-pf;
+  return `<div class="vote"><div class="vote-q">みんなの判定</div>
+    <div class="vbar"><div class="f" style="width:${pf}%">事実 ${pf}%</div><div class="k" style="width:${pk}%">デマ ${pk}%</div></div>
+    <div class="vmine">あなたの判定：<b>${my==="fact"?"事実":"デマ"}</b> ・ 投票 ${t.toLocaleString()}件</div></div>`;
+}
+async function vote(id,choice){
+  lsSet("nk_vote_"+id,choice);
+  if(GAS_URL){ try{ const res=await gas({action:"vote",id,choice}); if(res&&res.ok){ STATS[id]=Object.assign({ss:0,sc:0},STATS[id],{f:res.f,k:res.k}); } }catch(e){} }
+  renderArt(get(id));
+}
+
+function rateHTML(a){
+  const my=getRate(a.id);
+  const sp=[1,2,3,4,5].map(n=>`<span class="${my&&n<=my?"on":""}" onclick="rate('${a.id}',${n})">★</span>`).join("");
+  const s=stat(a.id);
+  let avg,n;
+  if(s&&s.sc){ avg=(s.ss/s.sc); n=s.sc; }                               // GAS：みんなの平均
+  else { avg=(my?(a.rate*a.rateN+my)/(a.rateN+1):a.rate); n=a.rateN+(my?1:0); } // ダミー
+  return `<div class="rate"><div class="lab">この事件にゾッとした？（衝撃度を評価）</div><div class="stars">${sp}</div><div class="avg">みんなの平均 ★${avg.toFixed(1)}（${n.toLocaleString()}件）</div></div>`;
+}
+async function rate(id,n){
+  lsSet("nk_rate_"+id,n);
+  if(GAS_URL){ try{ const res=await gas({action:"rate",id,v:n}); if(res&&res.ok){ STATS[id]=Object.assign({f:0,k:0},STATS[id],{ss:res.avg*res.count, sc:res.count}); } }catch(e){} }
+  renderArt(get(id));
+}
+
+function shareHTML(a){
+  const url=location.origin+location.pathname+`?a=${a.id}`;
+  const text=`【ナンコレ】${a.title}\nこれ、事実だと思う…？👀 続きはこちら`;
+  const tw=`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+  const ln=`https://line.me/R/msg/text/?${encodeURIComponent(text+" "+url)}`;
+  return `<div class="share-h">この事件、誰かに教える？</div><div class="share">
+     <a class="tw" href="${tw}" target="_blank" rel="noopener">𝕏 でシェア</a>
+     <a class="ln" href="${ln}" target="_blank" rel="noopener">LINE</a>
+     <button class="cp" data-url="${url}" onclick="copyLink(this)">リンクをコピー</button></div>`;
+}
+function copyLink(btn){const u=btn.getAttribute("data-url");try{navigator.clipboard.writeText(u);btn.textContent="コピーしました ✓";}catch(e){btn.textContent="長押しでコピー";}}
+
+function esc(s){return String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));}
+let memName="";
+function getName(){try{return localStorage.getItem("nk_name")||"";}catch(e){return memName;}}
+function setName(v){try{localStorage.setItem("nk_name",v);}catch(e){memName=v;}}
+function cmtListHTML(id){
+  const all=DUMMY_CMT.concat(getCmts(id));
+  return all.map(c=>`<div class="cmt"><div class="who">${esc(c.n)}</div><div class="txt">${esc(c.t)}</div></div>`).join("");
+}
+function renderCmts(id){$("#cmtList").innerHTML=cmtListHTML(id);$("#cmtCount").textContent=DUMMY_CMT.length+getCmts(id).length;}
+function addCmt(id){
+  const ta=$("#cmtInput");const v=(ta.value||"").trim();if(!v)return;
+  const nm=($("#cmtName").value||"").trim()||"名無しさん";
+  setName(($("#cmtName").value||"").trim());
+  const a=getCmts(id);a.push({n:nm,t:v});lsSet("nk_cmt_"+id,a);ta.value="";renderCmts(id);
+}
+
+function renderArt(a){
+  const tr=TRUTH[a.truth];
+  $("#ov").classList.add("on");
+  const favBtn=$("#favBtn");
+  const setFav=s=>{favBtn.classList.toggle("on",s);favBtn.textContent=s?"♥ お気に入り済み":"♡ お気に入り";};
+  setFav(isFav(a.id));favBtn.onclick=()=>setFav(toggleFav(a.id));
+  const rel=ART.filter(x=>x.cat===a.cat&&x.id!==a.id).slice(0,5);
+  $("#ovBody").innerHTML=`<div class="a-em">${a.emoji}</div>${tagsHTML(a)}
+    <div class="a-ti">${a.title}</div>
+    <div class="a-meta">📖 約${a.read}分 ・ 🔥衝撃度 ${shockScore(a)} ・ 真偽：${tr.t} ・ 閲覧注意 ${stars(a.caution)}</div>
+    <div class="a-body">${bodyHTML(a)}</div>
+    ${voteHTML(a)}
+    ${rateHTML(a)}
+    ${shareHTML(a)}
+    <div class="src">出典：<a href="${a.src}" target="_blank" rel="noopener" style="color:var(--amber);word-break:break-all">${a.src}</a></div>
+    <div class="rel-h">関連する事件簿</div><div class="list">${rel.map(artCard).join("")}</div>
+    <div class="adslot">広告スペース（記事の最後）</div>`;
+  $("#ovBody").scrollTop=0;
+}
+let _artOpens=0;
+const INTERSTITIAL_EVERY=1; // 1=毎回表示 / 2=2記事に1回 / 3=3記事に1回 …
+function maybeShowInterstitial(){
+  _artOpens++;
+  if(INTERSTITIAL_EVERY>0 && (_artOpens-1)%INTERSTITIAL_EVERY===0){ $("#adInt").classList.add("on"); }
+}
+function closeInterstitial(){ $("#adInt").classList.remove("on"); }
+function openArt(id){const a=get(id);if(!a)return;if(HISTORY_OK){try{history.pushState({id},"",`?a=${id}`);}catch(e){HISTORY_OK=false;}}renderArt(a);maybeShowInterstitial();}
+function goBack(){HISTORY_OK?history.back():$("#ov").classList.remove("on");}
+if(HISTORY_OK){window.addEventListener("popstate",e=>{const id=(e.state&&e.state.id)||new URLSearchParams(location.search).get("a");const a=id&&get(id);a?renderArt(a):$("#ov").classList.remove("on");});}
+function initRoute(){const id=new URLSearchParams(location.search).get("a");const a=id&&get(id);if(a){if(HISTORY_OK){try{history.replaceState({id},"",`?a=${id}`);}catch(e){}}renderArt(a);}}
+
+renderHome();renderCat();renderRank();renderSearch();renderSave();initRoute();loadStats();
+</script>
+</body>
+</html>

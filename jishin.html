@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>地震まとめ｜最近の地震モニター</title>
+<meta name="description" content="最近の地震を一覧・マップでまとめてチェック。データは米国地質調査所(USGS)のリアルタイムフィードを使用。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;600;700&family=Roboto+Mono:wght@400;500&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0f14;--bg2:#0e141b;--panel:#141b24;--panel2:#19222d;
+    --line:#243140;--text:#e8eef5;--sub:#8ea0b2;--dim:#5e6f80;
+    --cyan:#3fd0d6;--accent:#ffb13c;
+    --m0:#3fb98f;--m3:#e7c14a;--m4:#e0a23c;--m5:#e0603c;--m6:#d9434e;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0}
+  body{font-family:'Zen Kaku Gothic New',sans-serif;
+    background:radial-gradient(120% 60% at 50% -10%, #11202b 0%, var(--bg) 60%) fixed;
+    color:var(--text);min-height:100dvh;display:flex;flex-direction:column;align-items:center}
+  .wrap{width:100%;max-width:480px;padding:0 14px 40px}
+  .mono{font-family:'Roboto Mono',monospace}
+
+  header{display:flex;align-items:center;justify-content:space-between;padding:16px 2px 10px}
+  .brandwrap{display:flex;align-items:center;gap:10px}
+  .seismo{width:34px;height:34px;border-radius:9px;background:var(--panel);border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
+  .seismo svg{width:24px;height:24px}
+  .ttl{font-family:'Teko';font-weight:700;font-size:30px;letter-spacing:1px;line-height:.8}
+  .ttl small{display:block;font-family:'Zen Kaku Gothic New';font-weight:500;font-size:10px;color:var(--sub);letter-spacing:2px;margin-top:3px}
+  .live{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--sub);cursor:pointer}
+  .live .dot{width:8px;height:8px;border-radius:50%;background:var(--m0);box-shadow:0 0 8px var(--m0);animation:blink 1.6s infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+  .notice{background:#1a1410;border:1px solid #4a3a22;color:#e7b87a;font-size:11px;line-height:1.5;border-radius:10px;padding:9px 12px;margin-bottom:14px}
+  .notice b{color:#ffcf8a}
+
+  .controls{display:flex;gap:8px;margin-bottom:14px}
+  .seg{flex:1;display:flex;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .seg button{flex:1;background:none;border:none;color:var(--sub);font-family:inherit;font-weight:700;font-size:12px;padding:9px 0;cursor:pointer}
+  .seg button.on{background:var(--cyan);color:#06222a}
+
+  .hero{position:relative;background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:16px;padding:18px;overflow:hidden;margin-bottom:14px;min-height:120px}
+  .hero .tag{font-size:10px;letter-spacing:2px;color:var(--sub);font-weight:700}
+  .hero .row{display:flex;align-items:center;gap:16px;margin-top:6px}
+  .magbig{font-family:'Teko';font-weight:700;font-size:78px;line-height:.8}
+  .magbig small{font-size:22px;font-weight:500;color:var(--sub);vertical-align:super}
+  .heroinfo{flex:1;min-width:0}
+  .place{font-weight:900;font-size:17px;line-height:1.3}
+  .meta{font-size:12px;color:var(--sub);margin-top:6px;line-height:1.7}
+  .meta .mono{color:var(--text)}
+  .ripple{position:absolute;right:-30px;top:50%;transform:translateY(-50%);width:200px;height:200px;pointer-events:none;opacity:.5}
+  .ripple span{position:absolute;inset:0;margin:auto;border-radius:50%;border:2px solid var(--m5);animation:rip 3s ease-out infinite}
+  .ripple span:nth-child(2){animation-delay:1s}.ripple span:nth-child(3){animation-delay:2s}
+  @keyframes rip{0%{width:20px;height:20px;opacity:.8}100%{width:200px;height:200px;opacity:0}}
+
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px 8px;text-align:center}
+  .stat .n{font-family:'Teko';font-weight:700;font-size:30px;line-height:.9}
+  .stat .l{font-size:10px;color:var(--sub);margin-top:3px}
+
+  .sect{display:flex;align-items:center;justify-content:space-between;margin:6px 2px 10px}
+  .sect h2{font-size:14px;font-weight:900;margin:0;letter-spacing:.5px}
+  .sect .hint{font-size:10px;color:var(--dim)}
+
+  .list{display:flex;flex-direction:column;gap:8px}
+  .quake{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px 13px;border-left-width:4px;text-decoration:none;color:inherit}
+  .mag{font-family:'Teko';font-weight:700;font-size:30px;min-width:54px;text-align:center;line-height:.8}
+  .mag small{display:block;font-family:'Zen Kaku Gothic New';font-weight:500;font-size:8px;color:var(--sub);letter-spacing:1px}
+  .qinfo{flex:1;min-width:0}
+  .qplace{font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .qmeta{font-size:11px;color:var(--sub);margin-top:2px}
+  .qtime{font-size:11px;color:var(--dim);white-space:nowrap;text-align:right}
+  .qtime b{display:block;color:var(--text);font-weight:700;font-size:12px}
+  .empty{color:var(--dim);text-align:center;padding:24px;font-size:13px}
+
+  .ad{display:flex;justify-content:center;margin:10px 0}
+  .ad iframe{border:0;display:block}
+
+  .map{position:relative;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:linear-gradient(180deg,#0e1822,#0a1119);margin:8px 0 4px}
+  .map svg{display:block;width:100%;height:auto}
+  .map .cap{position:absolute;left:10px;bottom:8px;font-size:10px;color:var(--dim)}
+
+  footer{margin-top:22px;font-size:10px;color:var(--dim);line-height:1.7;border-top:1px solid var(--line);padding-top:14px}
+  footer b{color:var(--sub)}
+  footer a{color:var(--cyan);text-decoration:none}
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <header>
+      <div class="brandwrap">
+        <div class="seismo"><svg viewBox="0 0 24 24" fill="none" stroke="#3fd0d6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h3l2-7 4 16 3-12 2 5h6"/></svg></div>
+        <div class="ttl">地震まとめ<small>RECENT QUAKES</small></div>
+      </div>
+      <div class="live" id="live" title="更新"><span class="dot"></span><span id="updated">読込中…</span></div>
+    </header>
+
+    <div class="notice">⚠️ <b>これは速報・防災用の公式情報ではありません。</b>避難など安全に関わる判断は、必ず気象庁などの公式発表を確認してください。</div>
+
+    <div class="controls">
+      <div class="seg" id="segArea">
+        <button class="on" data-area="jp">🇯🇵 日本周辺</button>
+        <button data-area="world">🌏 世界</button>
+      </div>
+      <div class="seg" id="segRange">
+        <button class="on" data-range="24h">24時間</button>
+        <button data-range="7d">7日間</button>
+      </div>
+    </div>
+
+    <div class="hero" id="hero"></div>
+    <div class="stats" id="stats"></div>
+
+    <div class="sect"><h2>最近の地震</h2><span class="hint">新しい順</span></div>
+    <div class="list" id="list"></div>
+
+    <div class="sect" style="margin-top:18px"><h2>震源マップ</h2><span class="hint" id="mapHint"></span></div>
+    <div class="map" id="map"></div>
+
+    <div class="ad"><iframe src="ad-rect.html" width="300" height="250" scrolling="no" frameborder="0" loading="lazy"></iframe></div>
+
+    <footer>
+      <b>データ出典：</b>アメリカ地質調査所（USGS）Earthquake Hazards Program のリアルタイムGeoJSONフィード（<a href="https://earthquake.usgs.gov/earthquakes/feed/" target="_blank" rel="noopener">earthquake.usgs.gov</a>）。<br>
+      USGSは世界規模のため、<b>日本の小規模な地震は表示されない</b>ことがあります。最新・正確な情報は<b>気象庁</b>の発表をご確認ください。<br>
+      個人運営のまとめサイト ／ 沼サイト製作所 @omosirosaito120
+    </footer>
+  </div>
+
+<script>
+const SHOW_AD=true; // 同フォルダに ad-rect.html（ナンコレと同じZucksタグ）を置くと広告表示
+const FEEDS={ "24h":"https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson",
+              "7d" :"https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson" };
+const JP={lonMin:122,lonMax:150,latMin:23,latMax:47}; // 日本周辺の範囲
+const cache={};
+let curArea="jp", curRange="24h", lastData=[];
+
+const $=id=>document.getElementById(id);
+function magColor(m){ if(m<2.5)return"var(--m0)"; if(m<4)return"var(--m3)"; if(m<5)return"var(--m4)"; if(m<6)return"var(--m5)"; return"var(--m6)"; }
+function magHex(m){ if(m<2.5)return"#3fb98f"; if(m<4)return"#e7c14a"; if(m<5)return"#e0a23c"; if(m<6)return"#e0603c"; return"#d9434e"; }
+function ago(ms){ const min=Math.floor((Date.now()-ms)/60000); if(min<1)return"たった今"; if(min<60)return min+"分前"; const h=Math.floor(min/60); if(h<24)return h+"時間前"; return Math.floor(h/24)+"日前"; }
+function hhmm(ms){ const d=new Date(ms); return String(d.getMonth()+1)+"/"+d.getDate()+" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"); }
+function esc(s){return (s||"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+async function fetchFeed(range){
+  if(cache[range]) return cache[range];
+  const res=await fetch(FEEDS[range],{cache:"no-store"});
+  if(!res.ok) throw new Error("HTTP "+res.status);
+  const j=await res.json();
+  const arr=(j.features||[]).map(f=>({
+    mag:f.properties.mag, place:f.properties.place||"震源不明",
+    time:f.properties.time, url:f.properties.url,
+    lon:f.geometry&&f.geometry.coordinates[0], lat:f.geometry&&f.geometry.coordinates[1],
+    depth:f.geometry&&f.geometry.coordinates[2]
+  })).filter(q=>typeof q.mag==="number"&&q.lat!=null);
+  arr.sort((a,b)=>b.time-a.time);
+  cache[range]=arr; return arr;
+}
+function inJP(q){ return q.lon>=JP.lonMin&&q.lon<=JP.lonMax&&q.lat>=JP.latMin&&q.lat<=JP.latMax; }
+function getData(){ return lastData.filter(q=>curArea==="jp"?inJP(q):true); }
+
+async function load(){
+  $("updated").textContent="更新中…";
+  try{
+    lastData=await fetchFeed(curRange);
+    renderAll();
+    $("updated").textContent=hhmm(Date.now())+" 更新";
+  }catch(e){
+    $("hero").innerHTML='<div class="empty">データを取得できませんでした。<br>時間をおいて再読み込みしてください。<br><span class="mono" style="font-size:10px">'+esc(e.message)+'</span></div>';
+    $("list").innerHTML=""; $("stats").innerHTML=""; $("map").innerHTML="";
+    $("updated").textContent="取得失敗";
+  }
+}
+
+function renderHero(){
+  const d=getData();
+  if(!d.length){ $("hero").innerHTML='<div class="empty">この条件の地震データはありません。</div>'; return; }
+  const q=d[0]; const c=magColor(q.mag);
+  $("hero").innerHTML=
+    '<div class="ripple" style="color:'+c+'"><span style="border-color:'+c+'"></span><span style="border-color:'+c+'"></span><span style="border-color:'+c+'"></span></div>'
+    +'<div class="tag">＼ 最新の地震 ／</div>'
+    +'<div class="row"><div class="magbig" style="color:'+c+'"><small>M</small>'+q.mag.toFixed(1)+'</div>'
+    +'<div class="heroinfo"><div class="place">'+esc(q.place)+'</div>'
+    +'<div class="meta">'+ago(q.time)+'（<span class="mono">'+hhmm(q.time)+'</span>頃）<br>深さ <span class="mono">約'+Math.round(q.depth)+'km</span></div></div></div>';
+}
+function renderStats(){
+  const d=getData();
+  const max=d.length?Math.max(...d.map(q=>q.mag)):0;
+  const big=d.filter(q=>q.mag>=4).length;
+  const cells=[["件数",d.length,""],["最大M",d.length?max.toFixed(1):"–",max?magColor(max):""],["M4+",big,""]];
+  $("stats").innerHTML=cells.map(c=>'<div class="stat"><div class="n" '+(c[2]?'style="color:'+c[2]+'"':'')+'>'+c[1]+'</div><div class="l">'+c[0]+'</div></div>').join("");
+}
+function renderList(){
+  const d=getData(); if(!d.length){ $("list").innerHTML='<div class="empty">該当なし</div>'; return; }
+  const show=d.slice(0,50); let html="";
+  show.forEach((q,i)=>{
+    const c=magColor(q.mag);
+    html+='<a class="quake" style="border-left-color:'+c+'" href="'+esc(q.url||"#")+'" target="_blank" rel="noopener">'
+      +'<div class="mag" style="color:'+c+'">'+q.mag.toFixed(1)+'<small>M</small></div>'
+      +'<div class="qinfo"><div class="qplace">'+esc(q.place)+'</div><div class="qmeta">深さ 約'+Math.round(q.depth)+'km</div></div>'
+      +'<div class="qtime"><b>'+ago(q.time)+'</b><span class="mono">'+hhmm(q.time)+'</span></div></a>';
+    if(i===3&&SHOW_AD) html+='<div class="ad"><iframe src="ad-rect.html" width="300" height="250" scrolling="no" frameborder="0" loading="lazy"></iframe></div>';
+  });
+  if(d.length>50) html+='<div class="empty">ほか '+(d.length-50)+' 件</div>';
+  $("list").innerHTML=html;
+}
+
+/* 自前SVGプロット地図（外部地図サーバー不要） */
+function renderMap(){
+  const d=getData(); const W=448,H=240;
+  let lonMin,lonMax,latMin,latMax,gridStep,refs;
+  if(curArea==="jp"){ lonMin=126;lonMax=148;latMin=27;latMax=46;gridStep=4;
+    refs=[{lon:139.69,lat:35.69,t:"東京"},{lon:135.5,lat:34.7,t:"大阪"},{lon:141.35,lat:43.06,t:"札幌"},{lon:130.4,lat:33.6,t:"福岡"}];
+    $("mapHint").textContent="日本周辺";
+  } else { lonMin=-180;lonMax=180;latMin=-60;latMax=78;gridStep=30; refs=[]; $("mapHint").textContent="世界"; }
+  const px=(lon)=>(lon-lonMin)/(lonMax-lonMin)*W;
+  const py=(lat)=>(1-(lat-latMin)/(latMax-latMin))*H;
+  let g="";
+  for(let lon=Math.ceil(lonMin/gridStep)*gridStep;lon<=lonMax;lon+=gridStep){ const x=px(lon); g+='<line x1="'+x.toFixed(1)+'" y1="0" x2="'+x.toFixed(1)+'" y2="'+H+'" stroke="#ffffff10"/>'; }
+  for(let lat=Math.ceil(latMin/gridStep)*gridStep;lat<=latMax;lat+=gridStep){ const y=py(lat); const bold=(lat===0); g+='<line x1="0" y1="'+y.toFixed(1)+'" x2="'+W+'" y2="'+y.toFixed(1)+'" stroke="'+(bold?"#ffffff28":"#ffffff10")+'"/>'; }
+  if(curArea==="world"){ const x0=px(0); g+='<line x1="'+x0.toFixed(1)+'" y1="0" x2="'+x0.toFixed(1)+'" y2="'+H+'" stroke="#ffffff28"/>'; }
+  let r="";
+  refs.forEach(rf=>{ const x=px(rf.lon),y=py(rf.lat); r+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="2" fill="#6c8196"/><text x="'+(x+5).toFixed(1)+'" y="'+(y+3).toFixed(1)+'" fill="#6c8196" font-size="9" font-family="Zen Kaku Gothic New">'+rf.t+'</text>'; });
+  let dots=""; const pts=d.slice(0,300);
+  for(let i=pts.length-1;i>=0;i--){ const q=pts[i]; const x=px(q.lon),y=py(q.lat); if(x<-5||x>W+5||y<-5||y>H+5)continue;
+    const rad=Math.max(2.2,2+(q.mag-2)*1.5); const col=magHex(q.mag);
+    if(i===0){ dots+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+(rad+3)+'" fill="none" stroke="'+col+'"><animate attributeName="r" values="'+rad+';'+(rad+10)+'" dur="1.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.9;0" dur="1.8s" repeatCount="indefinite"/></circle>'; }
+    dots+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="'+rad.toFixed(1)+'" fill="'+col+'" fill-opacity="0.82" stroke="'+col+'" stroke-opacity="0.4"/>';
+  }
+  $("map").innerHTML='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet">'+g+r+dots+'</svg><div class="cap">震源プロット（点の大きさ・色＝マグニチュード）</div>';
+}
+
+function renderAll(){ renderHero(); renderStats(); renderList(); renderMap(); }
+
+document.querySelectorAll("#segArea button").forEach(b=>b.onclick=()=>{ document.querySelectorAll("#segArea button").forEach(x=>x.classList.remove("on")); b.classList.add("on"); curArea=b.dataset.area; renderAll(); });
+document.querySelectorAll("#segRange button").forEach(b=>b.onclick=()=>{ document.querySelectorAll("#segRange button").forEach(x=>x.classList.remove("on")); b.classList.add("on"); curRange=b.dataset.range; load(); });
+$("live").onclick=()=>{ delete cache[curRange]; load(); };
+
+if(!SHOW_AD){ document.querySelectorAll(".ad").forEach(a=>a.remove()); }
+load();
+setInterval(()=>{ delete cache[curRange]; load(); }, 5*60*1000); // 5分ごと自動更新
+</script>
+</body>
+</html>

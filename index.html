@@ -92,6 +92,8 @@
   .ranktabs{display:flex;gap:8px;margin:0 0 14px}
   .ranktabs button{flex:1;border:1px solid var(--amber);background:transparent;color:var(--amber);border-radius:99px;padding:9px 8px;font-family:var(--sans);font-size:12.5px;font-weight:700;cursor:pointer}
   .ranktabs button.on{background:var(--amber);color:#1a1207}
+  .adwrap{margin:16px 0;display:flex;justify-content:center}
+  .adwrap .adfrm{max-width:100%}
 
   .tabbar{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 14px}
   .tabbar::-webkit-scrollbar{height:0}
@@ -190,13 +192,13 @@
       <div id="hero"></div>
       <div class="sec">あなたへのおすすめ</div>
       <div class="reco" id="recoRow"></div>
-      <div class="adslot">広告スペース（ホーム）</div>
+      <div class="adwrap"><iframe class="adfrm" src="ad-rect.html" width="300" height="250" scrolling="no" frameborder="0" loading="lazy" style="border:0;width:300px;height:250px;display:block;margin:0 auto"></iframe></div>
       <div class="sec">最新の事件簿</div>
       <div class="list" id="homeList"></div>
     </div>
     <div class="page" id="p-cat">
       <div class="tabbar" id="catTabs"></div>
-      <div class="adslot">広告スペース（カテゴリ）</div>
+      <div class="adwrap"><iframe class="adfrm" src="ad-rect.html" width="300" height="250" scrolling="no" frameborder="0" loading="lazy" style="border:0;width:300px;height:250px;display:block;margin:0 auto"></iframe></div>
       <div class="list" id="catList"></div>
     </div>
     <div class="page" id="p-rank">
@@ -206,7 +208,7 @@
     </div>
     <div class="page" id="p-search">
       <div class="searchwrap"><span class="si">🔍</span><input id="searchInput" placeholder="事件をさがす…（例：宇宙、前世）"></div>
-      <div class="adslot">広告スペース（検索）</div>
+      <div class="adwrap"><iframe class="adfrm" src="ad-rect.html" width="300" height="250" scrolling="no" frameborder="0" loading="lazy" style="border:0;width:300px;height:250px;display:block;margin:0 auto"></iframe></div>
       <div id="searchArea"></div>
     </div>
     <div class="page" id="p-save">
@@ -215,13 +217,13 @@
     </div>
   </div>
 
-  <div class="adanchor" id="adAnchor">広告スペース（アンカー）<button class="ax" onclick="document.getElementById('adAnchor').classList.add('hidden')">✕</button></div>
+  <div class="adanchor" id="adAnchor" style="display:none">広告スペース（アンカー）<button class="ax" onclick="document.getElementById('adAnchor').classList.add('hidden')">✕</button></div>
 
   <div class="adint" id="adInt">
     <div class="adint-box">
       <button class="adint-x" onclick="closeInterstitial()">✕</button>
       <div class="adint-label">広告</div>
-      <div class="adint-ad">広告スペース（記事を読む前のインタースティシャル）<br>※ここに忍者AdMax等のコードを設置</div>
+      <div class="adint-ad"><iframe class="adfrm" src="ad-rect.html" width="300" height="250" scrolling="no" frameborder="0" style="border:0;width:300px;height:250px;display:block;margin:0 auto"></iframe></div>
       <div class="adint-hint">✕ を押すと記事に進めます</div>
     </div>
   </div>
@@ -1937,7 +1939,7 @@ function artCard(a){return `<div class="art" onclick="openArt('${a.id}')"><div c
 // カード配列にインフィード広告を everyごとに挟む
 function withFeedAds(cards,every){
   if(!every)return cards.join("");
-  let out="";cards.forEach((c,i)=>{out+=c;if((i+1)%every===0&&i!==cards.length-1)out+='<div class="adslot">広告スペース（インフィード）</div>';});
+  let out="";cards.forEach((c,i)=>{out+=c;if((i+1)%every===0&&i!==cards.length-1)out+=zucksRect();});
   return out;
 }
 
@@ -1977,7 +1979,7 @@ function renderRank(){
   const byView=RANK_MODE==="view";
   const top=ART.slice().sort((a,b)=> byView ? (viewCount(b)-viewCount(a)) : (shockScore(b)-shockScore(a))).slice(0,30);
   const rows=top.map((a,i)=>`<div class="rk" onclick="openArt('${a.id}')"><div class="n">${i+1}</div><div class="em">${a.emoji}</div><div class="b"><h3>${a.title}</h3><div class="sc">${byView?("👁 閲覧 "+viewCount(a)):("🔥 衝撃度 "+shockScore(a))} ・ 閲覧注意 ${stars(a.caution)}</div></div></div>`);
-  let html="";rows.forEach((r,i)=>{html+=r;if(i===2||i===9)html+='<div class="adslot">広告スペース（ランキング内）</div>';});
+  let html="";rows.forEach((r,i)=>{html+=r;if(i===2||i===9)html+=zucksRect();});
   $("#rankList").innerHTML=html;
 }
 
@@ -2011,7 +2013,13 @@ function getCmts(id){return ls("nk_cmt_"+id,[]);}
 
 /* ===== 記事ページ ===== */
 let HISTORY_OK=true;try{history.replaceState(history.state||{},"",location.href);}catch(e){HISTORY_OK=false;}
-function bodyHTML(a){const paras=(a.body||a.excerpt).split(/\n\s*\n/).map(p=>p.trim()).filter(Boolean);const mid=Math.max(1,Math.floor(paras.length/2)-1);return paras.map((p,i)=>`<p>${p}</p>`+(i===mid&&paras.length>=3?'<div class="adslot">広告スペース（記事の中ほど）</div>':'')).join("");}
+/* ===== 広告タグ描画：タグを別ファイル(ad-rect.html)に置き、iframeで読み込む ===== */
+function adIframe(file,w,h){
+  return '<div class="adwrap"><iframe class="adfrm" src="'+file+'" width="'+w+'" height="'+h+'" scrolling="no" frameborder="0" loading="lazy" style="border:0;width:'+w+'px;height:'+h+'px;display:block;margin:0 auto"></iframe></div>';
+}
+function zucksRect(){return adIframe("ad-rect.html",300,250);}
+
+function bodyHTML(a){const paras=(a.body||a.excerpt).split(/\n\s*\n/).map(p=>p.trim()).filter(Boolean);const mid=Math.max(1,Math.floor(paras.length/2)-1);return paras.map((p,i)=>`<p>${p}</p>`+(i===mid&&paras.length>=3?zucksRect():'')).join("");}
 
 function voteHTML(a){
   const my=getVote(a.id);
@@ -2093,7 +2101,7 @@ function renderArt(a){
     ${shareHTML(a)}
     <div class="src">出典：<a href="${a.src}" target="_blank" rel="noopener" style="color:var(--amber);word-break:break-all">${a.src}</a></div>
     <div class="rel-h">関連する事件簿</div><div class="list">${rel.map(artCard).join("")}</div>
-    <div class="adslot">広告スペース（記事の最後）</div>`;
+    ${zucksRect()}`;
   $("#ovBody").scrollTop=0;
 }
 let _artOpens=0;

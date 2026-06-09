@@ -89,6 +89,9 @@
   .rk .b{flex:1;min-width:0}
   .rk h3{font-family:var(--serif);font-size:14px;font-weight:700;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .rk .sc{font-size:10.5px;color:var(--red);margin-top:2px}
+  .ranktabs{display:flex;gap:8px;margin:0 0 14px}
+  .ranktabs button{flex:1;border:1px solid var(--amber);background:transparent;color:var(--amber);border-radius:99px;padding:9px 8px;font-family:var(--sans);font-size:12.5px;font-weight:700;cursor:pointer}
+  .ranktabs button.on{background:var(--amber);color:#1a1207}
 
   .tabbar{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 14px}
   .tabbar::-webkit-scrollbar{height:0}
@@ -197,7 +200,8 @@
       <div class="list" id="catList"></div>
     </div>
     <div class="page" id="p-rank">
-      <div class="sec">衝撃度ランキング</div>
+      <div class="sec">ランキング</div>
+      <div class="ranktabs"><button id="rkShock" class="on" onclick="setRankMode('shock')">🔥 衝撃度</button><button id="rkView" onclick="setRankMode('view')">👁 人気（閲覧数）</button></div>
       <div id="rankList"></div>
     </div>
     <div class="page" id="p-search">
@@ -1915,6 +1919,12 @@ async function loadStats(){
 function stat(id){ return STATS[id] || null; }
 /* 衝撃度スコア：GASに評価データがあれば平均★×20（0〜100換算）、無ければダミー値 */
 function shockScore(a){ const s=stat(a.id); return (s&&s.sc)? Math.round(s.ss/s.sc*20) : a.shock; }
+/* ===== 閲覧数・シェア数・お気に入り数の記録（楽観的にローカルも更新） ===== */
+function _ensureStat(id){ return STATS[id] || (STATS[id]={f:0,k:0,ss:0,sc:0,v:0,sh:0,fav:0}); }
+const _viewed=new Set();
+function trackView(id){ if(_viewed.has(id))return; _viewed.add(id); const s=_ensureStat(id); s.v=(s.v||0)+1; if(GAS_URL){ gas({action:"view",id}).catch(()=>{}); } }
+function trackShare(id){ if(!id)return; const s=_ensureStat(id); s.sh=(s.sh||0)+1; if(GAS_URL){ gas({action:"share",id}).catch(()=>{}); } }
+function trackFav(id,d){ const s=_ensureStat(id); s.fav=Math.max(0,(s.fav||0)+d); if(GAS_URL){ gas({action:"fav",id,d}).catch(()=>{}); } }
 
 const DUMMY_CMT=[{n:"匿名さん",t:"これは諸説ありそう…でも夜に読むとゾッとする。"},{n:"通りすがり",t:"似た話を地元で聞いたことある。気になる。"}];
 
@@ -1959,10 +1969,14 @@ function renderCat(){
 }
 function selCat(c){curCat=c;renderCat();$("#scroll").scrollTop=0;}
 
-/* ===== ランキング（衝撃度） ===== */
+/* ===== ランキング（衝撃度 / 人気＝閲覧数） ===== */
+let RANK_MODE="shock";
+function viewCount(a){const s=stat(a.id);return (s&&s.v)?s.v:0;}
+function setRankMode(m){RANK_MODE=m;const s=$("#rkShock"),v=$("#rkView");if(s&&v){s.classList.toggle("on",m==="shock");v.classList.toggle("on",m==="view");}renderRank();}
 function renderRank(){
-  const top=ART.slice().sort((a,b)=>shockScore(b)-shockScore(a)).slice(0,30);
-  const rows=top.map((a,i)=>`<div class="rk" onclick="openArt('${a.id}')"><div class="n">${i+1}</div><div class="em">${a.emoji}</div><div class="b"><h3>${a.title}</h3><div class="sc">🔥 衝撃度 ${shockScore(a)} ・ 閲覧注意 ${stars(a.caution)}</div></div></div>`);
+  const byView=RANK_MODE==="view";
+  const top=ART.slice().sort((a,b)=> byView ? (viewCount(b)-viewCount(a)) : (shockScore(b)-shockScore(a))).slice(0,30);
+  const rows=top.map((a,i)=>`<div class="rk" onclick="openArt('${a.id}')"><div class="n">${i+1}</div><div class="em">${a.emoji}</div><div class="b"><h3>${a.title}</h3><div class="sc">${byView?("👁 閲覧 "+viewCount(a)):("🔥 衝撃度 "+shockScore(a))} ・ 閲覧注意 ${stars(a.caution)}</div></div></div>`);
   let html="";rows.forEach((r,i)=>{html+=r;if(i===2||i===9)html+='<div class="adslot">広告スペース（ランキング内）</div>';});
   $("#rankList").innerHTML=html;
 }
@@ -2041,11 +2055,11 @@ function shareHTML(a){
   const tw=`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
   const ln=`https://line.me/R/msg/text/?${encodeURIComponent(text+" "+url)}`;
   return `<div class="share-h">この事件、誰かに教える？</div><div class="share">
-     <a class="tw" href="${tw}" target="_blank" rel="noopener">𝕏 でシェア</a>
-     <a class="ln" href="${ln}" target="_blank" rel="noopener">LINE</a>
-     <button class="cp" data-url="${url}" onclick="copyLink(this)">リンクをコピー</button></div>`;
+     <a class="tw" href="${tw}" target="_blank" rel="noopener" onclick="trackShare('${a.id}')">𝕏 でシェア</a>
+     <a class="ln" href="${ln}" target="_blank" rel="noopener" onclick="trackShare('${a.id}')">LINE</a>
+     <button class="cp" data-url="${url}" data-id="${a.id}" onclick="copyLink(this)">リンクをコピー</button></div>`;
 }
-function copyLink(btn){const u=btn.getAttribute("data-url");try{navigator.clipboard.writeText(u);btn.textContent="コピーしました ✓";}catch(e){btn.textContent="長押しでコピー";}}
+function copyLink(btn){const u=btn.getAttribute("data-url");const id=btn.getAttribute("data-id");try{navigator.clipboard.writeText(u);btn.textContent="コピーしました ✓";trackShare(id);}catch(e){btn.textContent="長押しでコピー";}}
 
 function esc(s){return String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));}
 let memName="";
@@ -2068,7 +2082,7 @@ function renderArt(a){
   $("#ov").classList.add("on");
   const favBtn=$("#favBtn");
   const setFav=s=>{favBtn.classList.toggle("on",s);favBtn.textContent=s?"♥ お気に入り済み":"♡ お気に入り";};
-  setFav(isFav(a.id));favBtn.onclick=()=>setFav(toggleFav(a.id));
+  setFav(isFav(a.id));favBtn.onclick=()=>{const now=toggleFav(a.id);setFav(now);trackFav(a.id,now?1:-1);};
   const rel=ART.filter(x=>x.cat===a.cat&&x.id!==a.id).slice(0,5);
   $("#ovBody").innerHTML=`<div class="a-em">${a.emoji}</div>${tagsHTML(a)}
     <div class="a-ti">${a.title}</div>
@@ -2089,7 +2103,7 @@ function maybeShowInterstitial(){
   if(INTERSTITIAL_EVERY>0 && (_artOpens-1)%INTERSTITIAL_EVERY===0){ $("#adInt").classList.add("on"); }
 }
 function closeInterstitial(){ $("#adInt").classList.remove("on"); }
-function openArt(id){const a=get(id);if(!a)return;if(HISTORY_OK){try{history.pushState({id},"",`?a=${id}`);}catch(e){HISTORY_OK=false;}}renderArt(a);maybeShowInterstitial();}
+function openArt(id){const a=get(id);if(!a)return;if(HISTORY_OK){try{history.pushState({id},"",`?a=${id}`);}catch(e){HISTORY_OK=false;}}renderArt(a);trackView(id);maybeShowInterstitial();}
 function goBack(){HISTORY_OK?history.back():$("#ov").classList.remove("on");}
 if(HISTORY_OK){window.addEventListener("popstate",e=>{const id=(e.state&&e.state.id)||new URLSearchParams(location.search).get("a");const a=id&&get(id);a?renderArt(a):$("#ov").classList.remove("on");});}
 function initRoute(){const id=new URLSearchParams(location.search).get("a");const a=id&&get(id);if(a){if(HISTORY_OK){try{history.replaceState({id},"",`?a=${id}`);}catch(e){}}renderArt(a);}}
